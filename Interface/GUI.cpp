@@ -143,24 +143,20 @@ int main(int argc, char **argv) {
   //Box
   MyBox *viewBox = new MyBox(150, 20, 300, 60, "BioLab");
 
-  MyBtn *amostrasBtn = new MyBtn(10, 300, 120, 30, "Amostras");
-  amostrasBtn->callback(FuncionariosCallBack, NULL);
-  MyBtn *equipamentosBtn = new MyBtn(160, 300, 120, 30, "Equipamentos");
-  equipamentosBtn->callback(PesquisadoresCallBack, NULL);
-  MyBtn *projetosBtn = new MyBtn(310, 300, 120, 30, "Projetos");
-  projetosBtn->callback(TecnicosCallBack, NULL);
-  MyBtn *relatoriosBtn = new MyBtn(470, 300, 120, 30, "Relatórios");
-  relatoriosBtn->callback(ClienteCallBack, NULL);
-  
-
-  MyBtn *readButton = new MyBtn(10, 360, 120, 30, "Funcionários");
+  MyBtn *readButton = new MyBtn(10, 300, 120, 30, "Funcionários");
   readButton->callback(FuncionariosCallBack, NULL);
-  MyBtn *readOneButton = new MyBtn(160, 360, 120, 30, "Pesquisadores");
+  MyBtn *readOneButton = new MyBtn(160, 300, 120, 30, "Pesquisadores");
   readOneButton->callback(PesquisadoresCallBack, NULL);
-  MyBtn *updateButton = new MyBtn(310, 360, 120, 30, "Técnicos");
+  MyBtn *updateButton = new MyBtn(310, 300, 120, 30, "Técnicos");
   updateButton->callback(TecnicosCallBack, NULL);
-  MyBtn *createButton = new MyBtn(470, 360, 120, 30, "Clientes");
+  MyBtn *createButton = new MyBtn(470, 300, 120, 30, "Clientes");
   createButton->callback(ClienteCallBack, NULL);
+
+  MyBtn *equipamentosBtn = new MyBtn(160, 360, 120, 30, "Equipamentos");
+  equipamentosBtn->callback(PesquisadoresCallBack, NULL);
+  MyBtn *projetosBtn = new MyBtn(310, 360, 120, 30, "Projetos");
+  projetosBtn->callback(TecnicosCallBack, NULL);
+ 
 
   window->end();
   window->show(argc, argv);
