@@ -117,11 +117,28 @@ void PesquisadoresCallBack(Fl_Widget *w, void *data) {
 }
 
 void TecnicosCallBack(Fl_Widget *w, void *data) {
-  cout << "Update button pressed" << endl;
+  MyWindow* tecnicos_window = new MyWindow(600, 400, "Tecnicos");
+  tecnicos_window->show();
+  window->hide();
+
+  tecnicos_window->begin();
+
+  crudBtns(tecnicos_window);
+
+  tecnicos_window->end();
+  tecnicos_window->show();
 }
 
 void ClienteCallBack(Fl_Widget *w, void *data) {
-  cout << "Create button pressed" << endl;
+  MyWindow* clientes_window = new MyWindow(600, 400, "Clientes");
+  clientes_window->show();
+
+  clientes_window->begin();
+
+  crudBtns(clientes_window);
+
+  clientes_window->end();
+  clientes_window->show();
 }
 
 void mouseMoveCallback(void* data)

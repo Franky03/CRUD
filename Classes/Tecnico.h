@@ -2,16 +2,19 @@
 #include "Equipamento.h"
 #include <vector>
 
+using namespace std;
 
 class Tecnico : public Funcionario {
-    private:
-        std::string area;
-        std::vector<Equipamento> equipamentos;
     public:
-        Tecnico(std::string nome, int idade, std::string codigo, std::string cargo, float salario, std::string area);
-        std::string getArea();
-        void setArea(std::string area);
-        std::vector<Equipamento> getEquipamentos();
+        Tecnico(string nome, int idade, string codigo, string cargo, float salario, string area);
+        
+        string getArea();
+        void setArea(string area);
+        vector<Equipamento> getEquipamentos();
         void addEquipamento(Equipamento equipamento);
-        void removeEquipamento(std::string nome);
+        void removeEquipamento(string nome);
+    
+    private:
+        string area;
+        vector<Equipamento> equipamentos;
 };

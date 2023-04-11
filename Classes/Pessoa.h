@@ -1,21 +1,24 @@
 #include <iostream>
 
+using namespace std;
+
 class Pessoa {
-    private:
-        std::string nome;
-        int idade;
-        std::string cpf;
-        std::string telefone;
-        
     public:
         Pessoa();
-        Pessoa(std::string nome, int idade);
-        std::string getNome();
+        Pessoa(string nome, int idade);
+
+        string getNome();
+        void setNome(string nome);
         int getIdade();
-        void setNome(std::string nome);
         void setIdade(int idade);
-        void setCpf(std::string cpf);
-        void setTelefone(std::string telefone);
-        std::string getCpf();
-        std::string getTelefone();
+        string getCpf();
+        void setCpf(string cpf);
+        string getTelefone();
+        void setTelefone(string telefone);
+
+    private:
+        string nome;
+        int idade;
+        string cpf;
+        string telefone;
 };

@@ -1,16 +1,20 @@
 #include "Pessoa.h"
 
+using namespace std;
+
 class Funcionario : public Pessoa {
-    private:
-        std::string codigo;
-        std::string cargo;
-        float salario;
     public:
-        Funcionario(std::string nome, int idade, std::string codigo, std::string cargo, float salario);
-        std::string getCodigo();
-        std::string getCargo();
+        Funcionario(string nome, int idade, string codigo, string cargo, float salario);
+
+        string getCodigo();
+        void setCodigo(string codigo);
+        string getCargo();
+        void setCargo(string cargo);
         float getSalario();
-        void setCodigo(std::string codigo);
-        void setCargo(std::string cargo);
         void setSalario(float salario);
+    
+    private:
+        string codigo;
+        string cargo;
+        float salario;
 };
