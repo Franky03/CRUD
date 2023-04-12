@@ -1,5 +1,6 @@
 #include "sqlite3.h"
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -9,8 +10,8 @@ class CRUD {
         char *err_msg = 0;
         int rc;
     public:
-        CRUD();
+        CRUD(sqlite3 *db);
         void createObj(string classe, vector<string> atributos);
-        void readObj(string classe, string nome);
+        vector<string> readObj(string classe, string nome);
     
 };

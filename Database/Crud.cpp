@@ -1,5 +1,10 @@
 #include "Crud.h"
 
+CRUD::CRUD(sqlite3 *db)
+{
+    this->db = db;
+}
+
 void CRUD::createObj(string classe, vector<string> atributos){
     
     rc = sqlite3_open("mydb.db", &db);
@@ -13,28 +18,28 @@ void CRUD::createObj(string classe, vector<string> atributos){
     string sql = "INSERT INTO " + classe + " (";
     string values = " VALUES (";
 
-    if(classe != "Projeto" && classe != "Equipamento"){
+    if(classe != "PROJETO" && classe != "EQUIPAMENTO"){
         sql += "nome, idade, cpf, telefone";
         values += "'" + atributos[0] + "', " + atributos[1] + ", '" + atributos[2] + "', '" + atributos[3] + "'";
 
-        if(classe == "Funcionario"){
+        if(classe == "FUNCIONARIO"){
             sql += ", codigo, cargo, salario)";
             values += ", '" + atributos[4] + "', '" + atributos[5] + "', " + atributos[6] + ")";
         }
-        else if(classe == "Pesquisador" || classe == "Tecnico"){
+        else if(classe == "PESQUISADOR" || classe == "TECNICO"){
             sql += ", codigo, cargo, salario, area)";
             values += ", '" + atributos[4] + "', '" + atributos[5] + "', " + atributos[6] + ", '" + atributos[7] + "')";
         }
-        else if(classe == "Cliente"){
+        else if(classe == "CLIENTE"){
             sql += ", encomenda, data)";
             values += ", '" + atributos[4] + "', '" + atributos[5] + "')";
         }
     }
-    else if(classe == "Projeto"){
+    else if(classe == "PROJETO"){
         sql += "titulo, descricao, duracao)";
         values += "'" + atributos[0] + "', '" + atributos[1] + "', " + atributos[2] + ")";
     }
-    else if(classe == "Equipamento"){
+    else if(classe == "EQUIPAMENTO"){
         sql += "nome, num_serie, modelo, disponivel)",
         values += "'" + atributos[0] + "', " + atributos[1] + ", '" + atributos[2] + "', " + atributos[3] + ")";
     }
@@ -53,7 +58,15 @@ void CRUD::createObj(string classe, vector<string> atributos){
     cout << "Objeto criado com sucesso!" << endl;
 }
 
-void CRUD::readObj(string classe, string nome){
+int searchByNameCallBack(void* data, int argc, char** argv, char** azColName){
+    vector<string> *result = static_cast< vector<string> *>(data);
+    for(int i = 0; i < argc; i++){
+        result->push_back(argv[i]);
+    }
+    return 0;
+}
+
+vector<string> CRUD::readObj(string classe, string nome){
 
     rc = sqlite3_open("mydb.db", &db);
 
@@ -63,7 +76,18 @@ void CRUD::readObj(string classe, string nome){
         exit(1);
     }
 
-    string sql = "SELECT * from " + classe + "WHERE"
+    vector<string> result;
+    string sql = "SELECT * FROM " + classe + " WHERE nome LIKE '%" + nome + "%';";
+    rc = sqlite3_exec(db, sql.c_str(), searchByNameCallBack, &result, &err_msg);
+
+    if(rc != SQLITE_OK ) {
+        cerr << "SQL error: " << err_msg << endl;
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+        exit(1);
+    }
 
 
+    sqlite3_close(db);
+    return result;
 }

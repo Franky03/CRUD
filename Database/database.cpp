@@ -1,8 +1,4 @@
-#include <iostream> 
-#include <vector>
-#include "sqlite3.h"
-
-using namespace std;
+#include "Crud.h"
 
 int main(void){
     sqlite3 *db;
@@ -19,9 +15,9 @@ int main(void){
     //Tabela de Funcionários
 
     const char *func_table = "CREATE TABLE IF NOT EXISTS FUNCIONARIO("
-                             "id INT PRIMARY KEY NOT NULL,"
+                             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                              "nome TEXT NOT NULL,"
-                             "idade INT NOT NULL,"
+                             "idade INTEGER NOT NULL,"
                              "cpf TEXT NOT NULL,"
                              "telefone TEXT NOT NULL,"
                              "codigo TEXT NOT NULL,"
@@ -42,9 +38,9 @@ int main(void){
     //Tabela de Pesquisadores
 
     const char *research_table = "CREATE TABLE IF NOT EXISTS PESQUISADOR("
-                                 "id INT PRIMARY KEY NOT NULL,"
+                                 "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                  "nome TEXT NOT NULL,"
-                                 "idade INT NOT NULL,"
+                                 "idade INTEGER NOT NULL,"
                                  "cpf TEXT NOT NULL,"
                                  "telefone TEXT NOT NULL,"
                                  "codigo TEXT NOT NULL,"
@@ -65,10 +61,10 @@ int main(void){
     //Tabela de Projetos
 
     const char *project_table = "CREATE TABLE IF NOT EXISTS PROJETO("
-                                "id INT PRIMARY KEY NOT NULL,"
+                                "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                 "titulo TEXT NOT NULL,"
                                 "descricao TEXT NOT NULL,"
-                                "duracao INT NOT NULL);";
+                                "duracao INTEGER NOT NULL);";
     
     result = sqlite3_exec(db, project_table, 0, 0, &err_msg);
 
@@ -84,8 +80,8 @@ int main(void){
     //Tabela de Relacionamento
 
     const char *project_researcher = "CREATE TABLE IF NOT EXISTS PROJETO_PESQUISADOR("
-                                     "id_projeto INT NOT NULL,"
-                                     "id_pesquisador INT NOT NULL,"
+                                     "id_projeto INTEGER NOT NULL,"
+                                     "id_pesquisador INTEGER NOT NULL,"
                                      "FOREIGN KEY (id_projeto) REFERENCES PROJETO(id),"
                                      "FOREIGN KEY (id_pesquisador) REFERENCES PESQUISADOR(id));";
     
@@ -103,9 +99,9 @@ int main(void){
     // Tabela de Técnicos
 
     const char *tech_table = "CREATE TABLE IF NOT EXISTS TECNICO("
-                             "id INT PRIMARY KEY NOT NULL,"
+                             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                              "nome TEXT NOT NULL,"
-                             "idade INT NOT NULL,"
+                             "idade INTEGER NOT NULL,"
                              "cpf TEXT NOT NULL,"
                              "telefone TEXT NOT NULL,"
                              "codigo TEXT NOT NULL,"
@@ -127,9 +123,9 @@ int main(void){
     // Tabela de Equipamentos
 
     const char *equip_table = "CREATE TABLE IF NOT EXISTS EQUIPAMENTO("
-                               "id INT PRIMARY KEY NOT NULL,"
+                               "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                "nome TEXT NOT NULL,"
-                               "num_serie INT NOT NULL,"
+                               "num_serie INTEGER NOT NULL,"
                                "modelo TEXT NOT NULL,"
                                "disponivel BOOL NOT NULL);";
     
@@ -146,8 +142,8 @@ int main(void){
     // Tabela de Relacionamento
 
     const char *tech_equip = "CREATE TABLE IF NOT EXISTS TECNICO_EQUIPAMENTO("
-                             "id_tecnico INT NOT NULL,"
-                             "id_equipamento INT NOT NULL,"
+                             "id_tecnico INTEGER NOT NULL,"
+                             "id_equipamento INTEGER NOT NULL,"
                              "FOREIGN KEY (id_tecnico) REFERENCES TECNICO(id),"
                              "FOREIGN KEY (id_equipamento) REFERENCES EQUIPAMENTO(id));";
     
@@ -160,11 +156,16 @@ int main(void){
         exit(1);
     }
 
-
-
-
-
     cout << "Opened database successfully" << endl;
+
+    CRUD myCrud = CRUD(db);
+    vector<string> data = {"Joao", "20", "065335874", "123456789", "000012456", "Faxineiro", "1000.34"};
+    //myCrud.createObj("FUNCIONARIO", data);
+    vector<string> joao = myCrud.readObj("FUNCIONARIO", "Joao");
+    
+    for(int i = 0; i < joao.size(); i++){
+        cout << joao[i] << endl;
+    }
 
     sqlite3_close(db);
     
