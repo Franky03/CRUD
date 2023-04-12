@@ -5,7 +5,7 @@ using namespace std;
 class Pessoa {
     public:
         Pessoa();
-        Pessoa(string nome, int idade);
+        Pessoa(string nome, int idade, string cpf, string telefone);
 
         string getNome();
         void setNome(string nome);

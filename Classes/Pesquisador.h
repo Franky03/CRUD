@@ -6,7 +6,7 @@ using namespace std;
 
 class Pesquisador : public Funcionario {
     public:
-        Pesquisador(string nome, int idade, string codigo, string cargo, float salario, string area, string orientador);
+        Pesquisador(string nome, int idade, string cpf, string telefone,  string codigo, string cargo, float salario, string area);
 
         string getArea();
         void setArea(string area);

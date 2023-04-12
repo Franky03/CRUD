@@ -4,7 +4,7 @@ using namespace std;
 
 class Cliente : public Pessoa {
     public:
-        Cliente(string nome, int idade, string cpf, string encomenda, string data);
+        Cliente(string nome, int idade, string cpf, string telefone, string encomenda, string data);
         
         string getEncomenda();
         void setEncomenda(string encomenda);

@@ -132,6 +132,7 @@ void TecnicosCallBack(Fl_Widget *w, void *data) {
 void ClienteCallBack(Fl_Widget *w, void *data) {
   MyWindow* clientes_window = new MyWindow(600, 400, "Clientes");
   clientes_window->show();
+  window->hide();
 
   clientes_window->begin();
 

@@ -6,7 +6,7 @@ using namespace std;
 
 class Tecnico : public Funcionario {
     public:
-        Tecnico(string nome, int idade, string codigo, string cargo, float salario, string area);
+        Tecnico(string nome, int idade, string cpf, string telefone, string codigo, string cargo, float salario, string area);
         
         string getArea();
         void setArea(string area);
