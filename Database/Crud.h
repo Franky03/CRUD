@@ -13,5 +13,7 @@ class CRUD {
         CRUD(sqlite3 *db);
         void createObj(string classe, vector<string> atributos);
         vector<string> readObj(string classe, string nome);
+        void updateObj(string classe, int id, vector<string> atributos);
+        void deleteObj(string classe, int id);
     
 };

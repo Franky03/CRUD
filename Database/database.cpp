@@ -1,5 +1,16 @@
 #include "Crud.h"
 
+void Execute(const char *sql_ms, sqlite3 *db, char *err_msg, int rc) {
+    rc = sqlite3_exec(db, sql_ms, 0, 0, &err_msg);
+
+    if(rc != SQLITE_OK ) {
+        cerr << "SQL error: " << err_msg << endl;
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+        exit(1);
+    }
+}
+
 int main(void){
     sqlite3 *db;
     sqlite3_stmt *stmt;
@@ -25,15 +36,7 @@ int main(void){
                              "salario REAL NOT NULL);";
                              
 
-    result = sqlite3_exec(db, func_table, 0, 0, &err_msg);
-    if(result != SQLITE_OK ) {
-        cerr << "SQL error: " << err_msg << endl;
-        sqlite3_free(err_msg);
-        sqlite3_close(db);
-        exit(1);
-    }
-
-    cout << "Passei daqui 1" << endl;
+    Execute(func_table, db, err_msg, result);
 
     //Tabela de Pesquisadores
 
@@ -48,15 +51,7 @@ int main(void){
                                  "salario REAL NOT NULL,"
                                  "area TEXT NOT NULL);";
 
-    result = sqlite3_exec(db, research_table, 0, 0, &err_msg);
-    if(result != SQLITE_OK ) {
-        cerr << "SQL error: " << err_msg << endl;
-        sqlite3_free(err_msg);
-        sqlite3_close(db);
-        exit(1);
-    }
-
-    cout << "Passei daqui 2" << endl;
+    Execute(research_table, db, err_msg, result);
 
     //Tabela de Projetos
 
@@ -66,16 +61,7 @@ int main(void){
                                 "descricao TEXT NOT NULL,"
                                 "duracao INTEGER NOT NULL);";
     
-    result = sqlite3_exec(db, project_table, 0, 0, &err_msg);
-
-    if(result != SQLITE_OK ) {
-        cerr << "SQL error: " << err_msg << endl;
-        sqlite3_free(err_msg);
-        sqlite3_close(db);
-        exit(1);
-    }
-
-    cout << "Passei daqui 3" << endl;
+    Execute(project_table, db, err_msg, result);
 
     //Tabela de Relacionamento
 
@@ -85,16 +71,7 @@ int main(void){
                                      "FOREIGN KEY (id_projeto) REFERENCES PROJETO(id),"
                                      "FOREIGN KEY (id_pesquisador) REFERENCES PESQUISADOR(id));";
     
-    result = sqlite3_exec(db, project_researcher, 0, 0, &err_msg);
-
-    if(result != SQLITE_OK ) {
-        cerr << "SQL error: " << err_msg << endl;
-        sqlite3_free(err_msg);
-        sqlite3_close(db);
-        exit(1);
-    }
-
-    cout << "Passei daqui 4" << endl;
+    Execute(project_researcher, db, err_msg, result);
 
     // Tabela de Técnicos
 
@@ -109,16 +86,7 @@ int main(void){
                              "salario REAL NOT NULL,"
                              "area TEXT NOT NULL);";
 
-    result = sqlite3_exec(db, tech_table, 0, 0, &err_msg);
-
-    if(result != SQLITE_OK ) {
-        cerr << "SQL error: " << err_msg << endl;
-        sqlite3_free(err_msg);
-        sqlite3_close(db);
-        exit(1);
-    }
-
-    cout << "Passei daqui 5" << endl;
+    Execute(tech_table, db, err_msg, result);
 
     // Tabela de Equipamentos
 
@@ -129,15 +97,7 @@ int main(void){
                                "modelo TEXT NOT NULL,"
                                "disponivel BOOL NOT NULL);";
     
-    result = sqlite3_exec(db, equip_table, 0, 0, &err_msg);
-    
-    if(result != SQLITE_OK ) {
-        cerr << "SQL error: " << err_msg << endl;
-        sqlite3_free(err_msg);
-        sqlite3_close(db);
-        exit(1);
-    }
-
+    Execute(equip_table, db, err_msg, result);
 
     // Tabela de Relacionamento
 
@@ -147,45 +107,30 @@ int main(void){
                              "FOREIGN KEY (id_tecnico) REFERENCES TECNICO(id),"
                              "FOREIGN KEY (id_equipamento) REFERENCES EQUIPAMENTO(id));";
     
-    result = sqlite3_exec(db, tech_equip, 0, 0, &err_msg);
-
-    if(result != SQLITE_OK ) {
-        cerr << "SQL error: " << err_msg << endl;
-        sqlite3_free(err_msg);
-        sqlite3_close(db);
-        exit(1);
-    }
+    Execute(tech_equip, db, err_msg, result);
 
     const char *cliente_table = "CREATE TABLE IF NOT EXISTS CLIENTE("
-                                "id INT PRIMARY KEY NOT NULL,"
+                                "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                 "nome TEXT NOT NULL,"
-                                "idade INT NOT NULL,"
+                                "idade INTEGER NOT NULL,"
                                 "cpf TEXT NOT NULL,"
                                 "telefone TEXT NOT NULL,"
                                 "encomenda TEXT NOT NULL,"
-                                "data TEXT NOT NULL,";
+                                "data TEXT NOT NULL);";
 
-    result = sqlite3_exec(db, cliente_table, 0, 0, &err_msg);
-
-    if(result != SQLITE_OK ) {
-        cerr << "SQL error: " << err_msg << endl;
-        sqlite3_free(err_msg);
-        sqlite3_close(db);
-        exit(1);
-    }
+    Execute(cliente_table, db, err_msg, result);
 
     cout << "Opened database successfully" << endl;
 
     CRUD myCrud = CRUD(db);
     vector<string> data = {"Joao", "20", "065335874", "123456789", "000012456", "Faxineiro", "1000.34"};
-    //myCrud.createObj("FUNCIONARIO", data);
+    myCrud.createObj("FUNCIONARIO", data);
     vector<string> joao = myCrud.readObj("FUNCIONARIO", "Joao");
-    
-    for(int i = 0; i < joao.size(); i++){
-        cout << joao[i] << endl;
-    }
 
+    
     sqlite3_close(db);
+
+    cout << "Closed database successfully" << endl;
     
     return 0;
 }

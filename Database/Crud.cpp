@@ -91,3 +91,7 @@ vector<string> CRUD::readObj(string classe, string nome){
     sqlite3_close(db);
     return result;
 }
+
+void CRUD::updateObj(string classe, int id, vector<string> atributos){
+    
+}
