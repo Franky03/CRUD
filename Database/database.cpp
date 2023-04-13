@@ -156,6 +156,24 @@ int main(void){
         exit(1);
     }
 
+    const char *cliente_table = "CREATE TABLE IF NOT EXISTS CLIENTE("
+                                "id INT PRIMARY KEY NOT NULL,"
+                                "nome TEXT NOT NULL,"
+                                "idade INT NOT NULL,"
+                                "cpf TEXT NOT NULL,"
+                                "telefone TEXT NOT NULL,"
+                                "encomenda TEXT NOT NULL,"
+                                "data TEXT NOT NULL,";
+
+    result = sqlite3_exec(db, cliente_table, 0, 0, &err_msg);
+
+    if(result != SQLITE_OK ) {
+        cerr << "SQL error: " << err_msg << endl;
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+        exit(1);
+    }
+
     cout << "Opened database successfully" << endl;
 
     CRUD myCrud = CRUD(db);
