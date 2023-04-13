@@ -4,6 +4,7 @@ using namespace std;
 
 class Equipamento {
     public:
+        Equipamento();
         Equipamento(string nome, int num_serie, string modelo, bool disponivel);
         
         string getNome();

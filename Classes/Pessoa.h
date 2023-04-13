@@ -16,8 +16,6 @@ class Pessoa {
         string getTelefone();
         void setTelefone(string telefone);
 
-        
-
     private:
         string nome;
         int idade;

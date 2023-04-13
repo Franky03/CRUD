@@ -4,6 +4,7 @@ using namespace std;
 
 class Cliente : public Pessoa {
     public:
+        Cliente();
         Cliente(string nome, int idade, string cpf, string telefone, string encomenda, string data);
         
         string getEncomenda();
