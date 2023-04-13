@@ -90,8 +90,12 @@ void ReadOneCallBack(Fl_Widget*w, void *data){
 
 void CreateCallBack(Fl_Widget*w, void *data){
   MyWindow* create_window = new MyWindow(600, 400, "Create");
+  CallbackArgs *args = static_cast<CallbackArgs*>(data);
+  MyWindow *new_window = args->window;
+  string classe = args->classe;
+
   create_window->show();
-  window->hide();
+  new_window->hide();
 
   create_window->begin();
 
@@ -115,7 +119,7 @@ void crudBtns(void* data, string classe){
   MyBtn *ReadOne = new MyBtn(310, 360, 120, 30, "Read One");
   ReadOne->callback(ReadOneCallBack, args);
   MyBtn *createButton = new MyBtn(470, 360, 120, 30, "Create");
-  createButton->callback(CreateCallBack, NULL);   
+  createButton->callback(CreateCallBack, args);   
 }
 
 // Funções de callback para as janelas de cada classe

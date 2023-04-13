@@ -71,6 +71,7 @@ void CRUD::CreateDB(){
     const char *project_researcher = "CREATE TABLE IF NOT EXISTS PROJETO_PESQUISADOR("
                                      "id_projeto INTEGER NOT NULL,"
                                      "id_pesquisador INTEGER NOT NULL,"
+                                     "PRIMARY KEY (id_projeto,id_pesquisador),"
                                      "FOREIGN KEY (id_projeto) REFERENCES PROJETO(id),"
                                      "FOREIGN KEY (id_pesquisador) REFERENCES PESQUISADOR(id));";
     
@@ -107,6 +108,7 @@ void CRUD::CreateDB(){
     const char *tech_equip = "CREATE TABLE IF NOT EXISTS TECNICO_EQUIPAMENTO("
                              "id_tecnico INTEGER NOT NULL,"
                              "id_equipamento INTEGER NOT NULL,"
+                             "PRIMARY KEY (id_tecnico, id_equipamento),"
                              "FOREIGN KEY (id_tecnico) REFERENCES TECNICO(id),"
                              "FOREIGN KEY (id_equipamento) REFERENCES EQUIPAMENTO(id));";
     
