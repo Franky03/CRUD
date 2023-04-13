@@ -25,6 +25,13 @@ void backCallBack(Fl_Widget *w, void *data) {
   new_window->hide();
 }
 
+void backButton(void *data){
+  MyWindow *new_window = static_cast<MyWindow*>(data);
+
+  MyBtn *backBtn = new MyBtn(10, 360, 120, 30, "Back");
+  backBtn->callback(backCallBack, new_window);
+}
+
 void search_callback(Fl_Widget* widget, void* data)
 {
     // Aqui eu estou pegando os argumentos passados como um struct
@@ -98,6 +105,8 @@ void CreateCallBack(Fl_Widget*w, void *data){
   new_window->hide();
 
   create_window->begin();
+
+  backButton(create_window);
 
   create_window->end();
   create_window->show();
