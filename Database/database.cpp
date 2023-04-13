@@ -11,7 +11,7 @@ void Execute(const char *sql_ms, sqlite3 *db, char *err_msg, int rc) {
     }
 }
 
-int main(void){
+int CreateDB(void){
     sqlite3 *db;
     sqlite3_stmt *stmt;
     char *err_msg = 0;
@@ -127,6 +127,20 @@ int main(void){
     myCrud.createObj("FUNCIONARIO", data);
     vector<string> joao = myCrud.readObj("FUNCIONARIO", "Joao");
 
+    // for(int i = 0; i < joao.size(); i++) {
+    //     cout << joao[i] << endl;
+    // }
+
+    vector<string> data2 = {"Joao Silva", "1200.4"};
+    vector<string> atributos = {"nome", "salario"};
+
+    //myCrud.updateObj("FUNCIONARIO", 3, atributos, data2);
+
+    //joao = myCrud.readObj("FUNCIONARIO", "Joao");
+
+    //for(int i = 0; i < joao.size(); i++) {
+    //    cout << joao[i] << endl;
+    //}
     
     sqlite3_close(db);
 

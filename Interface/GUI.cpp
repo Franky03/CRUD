@@ -1,9 +1,23 @@
 #include "Fl_All.h"
 
 using namespace std;
-
+// Janela principal
 MyWindow *window = new MyWindow(600,400, "BioLab");
+// Banco de dados e CRUD
+sqlite3 *db;
+CRUD *crud = new CRUD(db);
 
+// Structs para passar argumentos para o callback
+struct CallbackArgs {
+  MyWindow* window;
+  string classe;
+};
+struct InputArgs {
+  Fl_Input* input;
+  string classe;
+};
+
+// Funções de callback
 
 void backCallBack(Fl_Widget *w, void *data) {
   window->show();
@@ -13,13 +27,23 @@ void backCallBack(Fl_Widget *w, void *data) {
 
 void search_callback(Fl_Widget* widget, void* data)
 {
-    Fl_Input* search_box = (Fl_Input*) data;
+    // Aqui eu estou pegando os argumentos passados como um struct
+    // que vai ter um Fl_Input* e uma string como data
+
+    InputArgs* args = static_cast<InputArgs*>(data);
+    // Aqui eu só estraí o input e a classe
+    Fl_Input* search_box = args->input;
+    string classe = args->classe;
+
     const char* search_term = search_box->value();
 
-    //MyBox *result_box = new MyBox(100, 100, 300, 30, search_term);
-  
     // Fazer algo com o termo de busca
-    cout << "Termo de busca: " << search_term << endl;
+    vector<string> result = crud->readObj(classe, search_term);
+
+    for(int i = 0; i < result.size(); i++){
+        cout << result[i] << endl;
+    }
+
 }
 
 void ReadAllCallBack(Fl_Widget*w, void *data){
@@ -39,7 +63,10 @@ void ReadAllCallBack(Fl_Widget*w, void *data){
 
 void ReadOneCallBack(Fl_Widget*w, void *data){
   MyWindow* readOne_window = new MyWindow(600, 400, "Read One");
-  MyWindow *new_window = static_cast<MyWindow*>(data);
+
+  CallbackArgs* args = static_cast<CallbackArgs*>(data);
+  MyWindow *new_window = args->window;
+  string classe = args->classe;
 
   readOne_window->show();
   new_window->hide();
@@ -54,7 +81,8 @@ void ReadOneCallBack(Fl_Widget*w, void *data){
   searchInput->textsize(14);
 
   Fl_Button * searchButton = new Fl_Button(460, 10, 100, 30, "Procurar");
-  searchButton->callback(search_callback, searchInput);
+  InputArgs *inputArgs = new InputArgs{searchInput, classe};
+  searchButton->callback(search_callback, inputArgs);
 
   readOne_window->end();
   readOne_window->show();
@@ -71,19 +99,26 @@ void CreateCallBack(Fl_Widget*w, void *data){
   create_window->show();
 }
 
-void crudBtns(void* data){
+// Botões de CRUD que estarão em todas as telas
+
+void crudBtns(void* data, string classe){
+  
   MyWindow *new_window = static_cast<MyWindow*>(data);
+  // Aqui eu crio um struct que vai ter o ponteiro para a janela e a classe que eu quero
+  CallbackArgs *args = new CallbackArgs{new_window, classe};
 
   MyBtn *backBtn = new MyBtn(10, 360, 120, 30, "Back");
   backBtn->callback(backCallBack, new_window);
 
-  MyBtn *readOneButton = new MyBtn(160, 360, 120, 30, "Read All");
-  readOneButton->callback(ReadAllCallBack, new_window);
-  MyBtn *updateButton = new MyBtn(310, 360, 120, 30, "Read One");
-  updateButton->callback(ReadOneCallBack, new_window);
+  MyBtn *readAll = new MyBtn(160, 360, 120, 30, "Read All");
+  readAll->callback(ReadAllCallBack, new_window);
+  MyBtn *ReadOne = new MyBtn(310, 360, 120, 30, "Read One");
+  ReadOne->callback(ReadOneCallBack, args);
   MyBtn *createButton = new MyBtn(470, 360, 120, 30, "Create");
   createButton->callback(CreateCallBack, NULL);   
 }
+
+// Funções de callback para as janelas de cada classe
 
 void FuncionariosCallBack(Fl_Widget *w, void *data) {
 
@@ -93,7 +128,7 @@ void FuncionariosCallBack(Fl_Widget *w, void *data) {
 
   new_window->begin();
 
-  crudBtns(new_window);
+  crudBtns(new_window, "FUNCIONARIO");
 
   new_window->end();
   new_window->show(); 
@@ -109,7 +144,7 @@ void PesquisadoresCallBack(Fl_Widget *w, void *data) {
 
   
 
-  crudBtns(readOne_window);
+  crudBtns(readOne_window, "PESQUISADOR");
 
 
   readOne_window->end();
@@ -123,7 +158,7 @@ void TecnicosCallBack(Fl_Widget *w, void *data) {
 
   tecnicos_window->begin();
 
-  crudBtns(tecnicos_window);
+  crudBtns(tecnicos_window, "TECNICO");
 
   tecnicos_window->end();
   tecnicos_window->show();
@@ -136,26 +171,16 @@ void ClienteCallBack(Fl_Widget *w, void *data) {
 
   clientes_window->begin();
 
-  crudBtns(clientes_window);
+  crudBtns(clientes_window, "CLIENTE");
 
   clientes_window->end();
   clientes_window->show();
 }
 
-void mouseMoveCallback(void* data)
-{
-    Fl_Window* window = (Fl_Window*)data;
-    int mouseX = Fl::event_x();
-    int mouseY = Fl::event_y();
-    int windowX = window->x();
-    int windowY = window->y();
-    cout << "Coordenadas do mouse na janela: (" << mouseX - windowX << ", " << mouseY - windowY << ")" << endl;
-    Fl::repeat_timeout(0.1, mouseMoveCallback, data);
-}
-
-
-
 int main(int argc, char **argv) {
+  // Criar tables se não existirem
+  crud->CreateDB();
+  
   //Window
 
   //Box
