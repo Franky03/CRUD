@@ -1,6 +1,6 @@
 #include "Crud.h"
 
-void Execute(const char *sql_ms, sqlite3 *db, char *err_msg, int rc) {
+void Executar(const char *sql_ms, sqlite3 *db, char *err_msg, int rc) {
     rc = sqlite3_exec(db, sql_ms, 0, 0, &err_msg);
 
     if(rc != SQLITE_OK ) {
@@ -11,7 +11,7 @@ void Execute(const char *sql_ms, sqlite3 *db, char *err_msg, int rc) {
     }
 }
 
-int CreateDB(void){
+int main(void){
     sqlite3 *db;
     sqlite3_stmt *stmt;
     char *err_msg = 0;
@@ -36,7 +36,7 @@ int CreateDB(void){
                              "salario REAL NOT NULL);";
                              
 
-    Execute(func_table, db, err_msg, result);
+    Executar(func_table, db, err_msg, result);
 
     //Tabela de Pesquisadores
 
@@ -51,7 +51,7 @@ int CreateDB(void){
                                  "salario REAL NOT NULL,"
                                  "area TEXT NOT NULL);";
 
-    Execute(research_table, db, err_msg, result);
+    Executar(research_table, db, err_msg, result);
 
     //Tabela de Projetos
 
@@ -61,7 +61,7 @@ int CreateDB(void){
                                 "descricao TEXT NOT NULL,"
                                 "duracao INTEGER NOT NULL);";
     
-    Execute(project_table, db, err_msg, result);
+    Executar(project_table, db, err_msg, result);
 
     //Tabela de Relacionamento
 
@@ -71,7 +71,7 @@ int CreateDB(void){
                                      "FOREIGN KEY (id_projeto) REFERENCES PROJETO(id),"
                                      "FOREIGN KEY (id_pesquisador) REFERENCES PESQUISADOR(id));";
     
-    Execute(project_researcher, db, err_msg, result);
+    Executar(project_researcher, db, err_msg, result);
 
     // Tabela de Técnicos
 
@@ -86,7 +86,7 @@ int CreateDB(void){
                              "salario REAL NOT NULL,"
                              "area TEXT NOT NULL);";
 
-    Execute(tech_table, db, err_msg, result);
+    Executar(tech_table, db, err_msg, result);  
 
     // Tabela de Equipamentos
 
@@ -97,7 +97,7 @@ int CreateDB(void){
                                "modelo TEXT NOT NULL,"
                                "disponivel BOOL NOT NULL);";
     
-    Execute(equip_table, db, err_msg, result);
+    Executar(equip_table, db, err_msg, result);
 
     // Tabela de Relacionamento
 
@@ -107,7 +107,7 @@ int CreateDB(void){
                              "FOREIGN KEY (id_tecnico) REFERENCES TECNICO(id),"
                              "FOREIGN KEY (id_equipamento) REFERENCES EQUIPAMENTO(id));";
     
-    Execute(tech_equip, db, err_msg, result);
+    Executar(tech_equip, db, err_msg, result);
 
     const char *cliente_table = "CREATE TABLE IF NOT EXISTS CLIENTE("
                                 "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -118,7 +118,7 @@ int CreateDB(void){
                                 "encomenda TEXT NOT NULL,"
                                 "data TEXT NOT NULL);";
 
-    Execute(cliente_table, db, err_msg, result);
+    Executar(cliente_table, db, err_msg, result);
 
     cout << "Opened database successfully" << endl;
 
@@ -127,6 +127,13 @@ int CreateDB(void){
     myCrud.createObj("FUNCIONARIO", data);
     vector<string> joao = myCrud.readObj("FUNCIONARIO", "Joao");
 
+    vector<string> colunas =  myCrud.getColumnNames("FUNCIONARIO");
+    cout << "Colunas: " << endl;
+    for(int i = 0; i < colunas.size(); i++) {
+        cout << colunas[i] << endl;
+    }
+
+ 
     // for(int i = 0; i < joao.size(); i++) {
     //     cout << joao[i] << endl;
     // }
@@ -140,7 +147,7 @@ int CreateDB(void){
 
     //for(int i = 0; i < joao.size(); i++) {
     //    cout << joao[i] << endl;
-    //}
+    //} 
     
     sqlite3_close(db);
 

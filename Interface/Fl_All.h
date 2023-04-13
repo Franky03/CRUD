@@ -5,6 +5,8 @@
 #include "FL/fl_draw.H"
 #include <FL/Fl_PNG_Image.H>
 #include <FL/Fl_Input.H>
+#include <FL/Fl_Table.H>
+
 
 #include "MyBtn.h"
 #include "MyWindow.h"
@@ -14,5 +16,6 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <iomanip>
 
 #include "../Database/Crud.h"  

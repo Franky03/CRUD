@@ -1,4 +1,6 @@
 #include "Crud.h"
+#include <cctype>
+#include <string.h>
 
 CRUD::CRUD(sqlite3 *db)
 {
@@ -192,6 +194,23 @@ int searchByNameCallBack(void* data, int argc, char** argv, char** azColName){
     return 0;
 }
 
+int searchByColumnsCallBack(void* data, int argc, char** argv, char** azColName){
+    vector<string>* columns = reinterpret_cast<vector<string>*>(data);
+    
+    // Iterando sobre todas as colunas e adicionando seus nomes ao vetor de strings
+    for(int i = 0; i < argc; i++) {
+        if (strcmp(azColName[i], "name") == 0) {
+            string col_name = argv[i];
+            if(!col_name.empty()) {
+                col_name[0] = toupper(col_name[0]);
+                columns->push_back(argv[i]);
+            }
+        }
+    }
+    
+    return 0;
+}
+
 vector<string> CRUD::readObj(string classe, string nome){
 
     rc = sqlite3_open("mydb.db", &db);
@@ -249,4 +268,28 @@ void CRUD::updateObj(string classe, int id, vector<string> atributos, vector<str
         sqlite3_close(db);
         exit(1);
     }
+}
+
+vector<string> CRUD::getColumnNames(string table_name){
+    vector<string> columns;
+    rc = sqlite3_open("mydb.db", &db);
+
+    if(rc != SQLITE_OK) {
+        cerr << "Can't open database: " << sqlite3_errmsg(db) << endl;
+        sqlite3_close(db);
+        exit(1);
+    }
+
+    string sql = "PRAGMA table_info(" + table_name + ");";
+    rc = sqlite3_exec(db, sql.c_str(), searchByColumnsCallBack, &columns, &err_msg);
+    
+    if(rc != SQLITE_OK ) {
+        cerr << "SQL error: " << err_msg << endl;
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+        exit(1);
+    }
+
+    sqlite3_close(db);
+    return columns;
 }
