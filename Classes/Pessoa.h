@@ -1,4 +1,6 @@
 #include <iostream>
+#ifndef PESSOA_H
+#define PESSOA_H
 
 using namespace std;
 
@@ -22,3 +24,5 @@ class Pessoa {
         string cpf;
         string telefone;
 };
+
+#endif

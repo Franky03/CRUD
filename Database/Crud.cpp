@@ -293,3 +293,27 @@ vector<string> CRUD::getColumnNames(string table_name){
     sqlite3_close(db);
     return columns;
 }
+
+vector<string> CRUD::readAll(string classe){
+    rc = sqlite3_open("mydb.db", &db);
+
+    if(rc != SQLITE_OK) {
+        cerr << "Can't open database: " << sqlite3_errmsg(db) << endl;
+        sqlite3_close(db);
+        exit(1);
+    }
+
+    vector<string> result;
+    string sql = "SELECT * FROM " + classe + ";";
+    rc = sqlite3_exec(db, sql.c_str(), searchByNameCallBack, &result, &err_msg);
+
+    if(rc != SQLITE_OK ) {
+        cerr << "SQL error: " << err_msg << endl;
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+        exit(1);
+    }
+
+    sqlite3_close(db);
+    return result;
+}

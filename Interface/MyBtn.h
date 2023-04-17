@@ -7,4 +7,8 @@ class MyBtn : public Fl_Button {
         labelcolor(FL_BLACK);
         clear_visible_focus();
         }
+
+        void draw() override {
+            Fl_Button::draw(); 
+    }
 };

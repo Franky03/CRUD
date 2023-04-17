@@ -27,7 +27,8 @@ class MyTable : public Fl_Table {
     public:
         MyTable(int x, int y, int w, int h, int c, int r,  const char *l = 0) : Fl_Table(x, y, w, h, l) {
             rows(r);             
-            cols(c);             
+            cols(c);          
+               
             end();               
         }
 
@@ -48,6 +49,7 @@ class MyTable : public Fl_Table {
                     fl_push_clip(x, y, w, h);
                     fl_draw_box(FL_BORDER_BOX, x, y, w, h, col_header() ? row == 0 ? color() : FL_WHITE : color());
                     fl_color(FL_BLACK);
+                    //é pra colocar o botão somente se a linha for maior que 0 e se tiver conteudo naquela linha
                     
                     if (row == 0) {
                         // Desenhe o cabeçalho da coluna a partir da Coluna 1

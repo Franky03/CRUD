@@ -148,6 +148,12 @@ int main(void){
     //for(int i = 0; i < joao.size(); i++) {
     //    cout << joao[i] << endl;
     //} 
+
+    vector<string> allread =  myCrud.readAll("FUNCIONARIO");
+
+    for(int i = 0; i < allread.size(); i++) {
+        cout << allread[i] << endl;
+    }
     
     sqlite3_close(db);
 

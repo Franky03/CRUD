@@ -11,8 +11,13 @@ class Cliente : public Pessoa {
         void setEncomenda(string encomenda);
         string getData();
         void setData(string data);
+        void reclamar();
+        void elogiar();
+        void esperar();
 
     private: 
         string encomenda;
         string data;
+        bool clienteFeliz;
+        
 };

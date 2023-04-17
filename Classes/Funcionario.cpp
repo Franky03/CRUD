@@ -28,3 +28,19 @@ float Funcionario::getSalario(){
 void Funcionario::setSalario(float salario){
     this->salario = salario;
 }
+
+double Funcionario::calcularSalarioAnual()
+{
+    return this->salario * 12;
+}
+
+void Funcionario::trabalhar()
+{
+    this->funcionarioTrabalhando = true;
+}
+
+void Funcionario::descansar()
+{
+    this->funcionarioTrabalhando = false;
+}
+

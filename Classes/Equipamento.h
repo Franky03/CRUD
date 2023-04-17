@@ -1,4 +1,6 @@
 #include <iostream>
+#ifndef EQUIPAMENTO_H
+#define EQUIPAMENTO_H
 
 using namespace std;
 
@@ -22,3 +24,5 @@ class Equipamento {
         string modelo;
         bool disponivel;
 };
+
+#endif

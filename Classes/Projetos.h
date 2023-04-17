@@ -1,4 +1,6 @@
 #include <iostream>
+#ifndef PROJETOS_H
+#define PROJETOS_H
 
 using namespace std;
 
@@ -19,3 +21,5 @@ class Projeto {
         string descricao;
         int duracao;
 };
+
+#endif

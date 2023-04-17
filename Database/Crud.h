@@ -14,6 +14,7 @@ class CRUD {
         void CreateDB();
         void createObj(string classe, vector<string> atributos);
         vector<string> readObj(string classe, string nome);
+        vector<string> readAll(string classe);
         void updateObj(string classe, int id, vector<string> atributos, vector<string> valores);
         void deleteObj(string classe, int id);
         vector<string> getColumnNames(string classe);

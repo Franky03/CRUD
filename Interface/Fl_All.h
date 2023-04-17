@@ -8,6 +8,7 @@
 #include <FL/Fl_Table.H>
 
 
+
 #include "MyBtn.h"
 #include "MyWindow.h"
 #include "MyBox.h"
@@ -19,3 +20,4 @@
 #include <iomanip>
 
 #include "../Database/Crud.h"  
+#include "../Classes/allClass.h"

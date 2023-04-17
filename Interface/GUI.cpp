@@ -20,6 +20,18 @@ struct InputArgs {
   string classe;
 };
 
+struct CreateArgs {
+  MyWindow* wdw;
+  string classe;
+  vector<Fl_Input*> inputs;
+};
+
+struct PersonArgs {
+  MyWindow* wdw;
+  string classe;
+  Pessoa *pessoa;
+};
+
 // Funções de callback
 
 void backCallBack(Fl_Widget *w, void *data) {
@@ -41,6 +53,7 @@ void backButton(void *data){
   backBtn->callback(backCallBack, new_window);
 }
 
+
 void search_callback(Fl_Widget* widget, void* data)
 {
     // Aqui eu estou pegando os argumentos passados como um struct
@@ -55,30 +68,39 @@ void search_callback(Fl_Widget* widget, void* data)
     vector<string> column_names = crud->getColumnNames(classe);  
     const char* search_term = search_box->value();
 
-    // Fazer algo com o termo de busca   
-    vector<string> result = crud->readObj(classe, search_term);
-    Fl_Window* wdw = search_box->window();
-    MyTable *table = new MyTable(20, 60, 560, 300, 10, 7); 
-   
-      
-    table->set_data(result, column_names);  
-    table->col_width_all(100); 
-    wdw->add(table);
-    wdw->redraw();
-    // Fl_Box* results_box = new Fl_Box(20, 30, 560, 300, "Resultados:");
-    // results_box->box(FL_UP_BOX);
-    // results_box->align(FL_ALIGN_TOP_LEFT);
-    // results_box->labelsize(14);
+    // Fazer algo com o termo de busca 
+    // Se o o tamanho do termo de busca for maior que 0
+    if(strlen(search_term) > 0){
+        vector<string> result = crud->readObj(classe, search_term);
+        Fl_Window* wdw = search_box->window();
+        MyTable *table = new MyTable(20, 60, 560, 300, 11, 7);  
+        
+            
+        table->set_data(result, column_names);   
+        table->col_width_all(100);  
+        wdw->add(table);
 
-    // for(int i = 0; i < result.size(); i++){
-    //     results_box->copy_label((string(results_box->label()) + "\t" + result[i]).c_str());
-    // }
+        Pessoa *pessoa = new Pessoa(result[1], stoi(result[2]), result[3], result[4]);
+        
+         
+        wdw->redraw();
+    }
+    else {
+        cout << "Digite um termo de busca" << endl;
+    }
+    
+}
 
+void create_callback(Fl_Widget* widget, void* data)
+{
+    cout << "Create callback" << endl;
 }
 
 void ReadAllCallBack(Fl_Widget*w, void *data){
   MyWindow* readAll_window = new MyWindow(600, 400, "Read All");
-  MyWindow *new_window = static_cast<MyWindow*>(data);
+  CallbackArgs* args = static_cast<CallbackArgs*>(data);
+  MyWindow *new_window = args->window;
+  string classe = args->classe;
 
   readAll_window->show();
   last_window = new_window;
@@ -87,11 +109,28 @@ void ReadAllCallBack(Fl_Widget*w, void *data){
 
   readAll_window->begin();
 
+  vector<string> column_names = crud->getColumnNames(classe);
+  vector<string> result = crud->readAll(classe);
+  MyTable *table = new MyTable(20, 60, 560, 300, 11, 7);
+  table->set_data(result, column_names);
+  table->col_width_all(100);
+  readAll_window->add(table);
+  readAll_window->redraw();
+  
+
   backButton(readAll_window);
 
   readAll_window->end();
   readAll_window->show();
 
+}
+
+void InputStyle(Fl_Input *input, const char * label){
+  input->box(FL_BORDER_BOX);
+  input->label(label);
+  input->labelsize(14);
+  input->textcolor(FL_BLACK);
+  input->textsize(14);
 }
 
 void ReadOneCallBack(Fl_Widget*w, void *data){
@@ -108,11 +147,7 @@ void ReadOneCallBack(Fl_Widget*w, void *data){
   readOne_window->begin();
 
   Fl_Input * searchInput = new Fl_Input(150, 10, 300, 30);
-  searchInput->box(FL_BORDER_BOX);
-  searchInput->label("Procurar: ");
-  searchInput->labelsize(14);
-  searchInput->textcolor(FL_BLACK);
-  searchInput->textsize(14);
+  InputStyle(searchInput, "Procurar: ");
 
   Fl_Button * searchButton = new Fl_Button(460, 10, 100, 30, "Procurar");
   InputArgs *inputArgs = new InputArgs{readOne_window, searchInput ,classe};
@@ -130,13 +165,92 @@ void CreateCallBack(Fl_Widget*w, void *data){
   MyWindow *new_window = args->window;
   string classe = args->classe;
 
+  CreateArgs *createArgs = new CreateArgs{};
+  createArgs->wdw = create_window;
+  createArgs->classe = classe;
+
+
   create_window->show();
   last_window = new_window;
   new_window->hide();
 
   create_window->begin();
 
+  if(classe != "PROJETO" && classe != "EQUIPAMENTO"){
+    Fl_Input *nomeInput = new Fl_Input(150, 10, 300, 30);
+    InputStyle(nomeInput, "Nome: ");
+    createArgs->inputs.push_back(nomeInput);
+    Fl_Input *idadeInput = new Fl_Input(150, 50, 300, 30);
+    InputStyle(idadeInput, "Idade: ");
+    createArgs->inputs.push_back(idadeInput);
+    Fl_Input *cpfInput = new Fl_Input(150, 90, 300, 30);
+    InputStyle(cpfInput, "CPF: ");
+    createArgs->inputs.push_back(cpfInput);
+    Fl_Input* telefoneInput = new Fl_Input(150, 130, 300, 30);
+    InputStyle(telefoneInput, "Telefone: ");
+    createArgs->inputs.push_back(telefoneInput);
+
+
+    
+    if(classe != "CLIENTE"){
+      Fl_Input *codigoInput = new Fl_Input(150, 170, 300, 30);
+      InputStyle(codigoInput, "Código: ");
+      createArgs->inputs.push_back(codigoInput);
+      Fl_Input *cargoInput = new Fl_Input(150, 210, 300, 30);
+      InputStyle(cargoInput, "Cargo: ");
+      createArgs->inputs.push_back(cargoInput);
+      Fl_Input *salarioInput = new Fl_Input(150, 250, 300, 30);
+      InputStyle(salarioInput, "Salário: ");
+      createArgs->inputs.push_back(salarioInput);
+      
+      if(classe == "PESQUISADOR" || classe == "TECNICO"){
+        Fl_Input *areaInput = new Fl_Input(150, 290, 300, 30);
+        InputStyle(areaInput, "Área: ");
+        createArgs->inputs.push_back(areaInput);
+      }
+
+    }
+    else{
+      Fl_Input *encomendaInput = new Fl_Input(150, 170, 300, 30);
+      InputStyle(encomendaInput, "Encomenda: ");
+      createArgs->inputs.push_back(encomendaInput);
+      Fl_Input *dataInput = new Fl_Input(150, 210, 300, 30);
+      InputStyle(dataInput, "Data: ");
+      createArgs->inputs.push_back(dataInput);
+    }
+  }
+  else {
+    if(classe=="PROJETO"){
+      Fl_Input *nomeInput = new Fl_Input(150, 10, 300, 30);
+      InputStyle(nomeInput, "Titulo: ");
+      createArgs->inputs.push_back(nomeInput);
+      Fl_Input *descricaoInput = new Fl_Input(150, 50, 300, 30);
+      InputStyle(descricaoInput, "Descrição: ");
+      createArgs->inputs.push_back(descricaoInput); 
+      Fl_Input *duracaoInput = new Fl_Input(150, 90, 300, 30);
+      InputStyle(duracaoInput, "Duração: ");
+      createArgs->inputs.push_back(duracaoInput);
+    }
+    else{
+      Fl_Input *nomeInput = new Fl_Input(150, 10, 300, 30);
+      InputStyle(nomeInput, "Nome: ");
+      createArgs->inputs.push_back(nomeInput);
+      Fl_Input *numSerieInput = new Fl_Input(150, 50, 300, 30);
+      InputStyle(numSerieInput, "Número de Série: ");
+      createArgs->inputs.push_back(numSerieInput);
+      Fl_Input *modelo = new Fl_Input(150, 90, 300, 30);  
+      InputStyle(modelo, "Modelo: ");
+      createArgs->inputs.push_back(modelo);
+      Fl_Input *disponivelInput = new Fl_Input(150, 130, 300, 30);
+      InputStyle(disponivelInput, "Disponível: ");
+      createArgs->inputs.push_back(disponivelInput);  
+
+    }
+  }
+
   backButton(create_window);
+  MyBtn *createBtn = new MyBtn(460, 360, 100, 30, "Criar");
+  createBtn->callback(create_callback, createArgs);
 
   create_window->end();
   create_window->show();
@@ -154,7 +268,7 @@ void crudBtns(void* data, string classe){
   backBtn->callback(backStartCallBack, new_window);
 
   MyBtn *readAll = new MyBtn(160, 360, 120, 30, "Read All");
-  readAll->callback(ReadAllCallBack, new_window);
+  readAll->callback(ReadAllCallBack, args);
   MyBtn *ReadOne = new MyBtn(310, 360, 120, 30, "Read One");
   ReadOne->callback(ReadOneCallBack, args);
   MyBtn *createButton = new MyBtn(470, 360, 120, 30, "Create");
@@ -279,7 +393,7 @@ int main(int argc, char **argv) {
   MyBtn *equipamentosBtn = new MyBtn(160, 360, 120, 30, "Equipamentos");
   equipamentosBtn->callback(EquipamentoCallBack, NULL);
   MyBtn *projetosBtn = new MyBtn(310, 360, 120, 30, "Projetos");
-  projetosBtn->callback(TecnicosCallBack, NULL);
+  projetosBtn->callback(ProjetoCallBack, NULL);
  
 
   window->end();
