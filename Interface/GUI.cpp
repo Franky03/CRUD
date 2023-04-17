@@ -71,18 +71,28 @@ void search_callback(Fl_Widget* widget, void* data)
     // Fazer algo com o termo de busca 
     // Se o o tamanho do termo de busca for maior que 0
     if(strlen(search_term) > 0){
-        vector<string> result = crud->readObj(classe, search_term);
-        Fl_Window* wdw = search_box->window();
-        MyTable *table = new MyTable(20, 60, 560, 300, 11, 7);  
+        vector<string> result = crud->readObj(classe, search_term); 
         
-            
-        table->set_data(result, column_names);   
-        table->col_width_all(100);  
-        wdw->add(table);
+        Fl_Window* wdw = search_box->window();
+        
+        if(result.size() == 0){
+            cout << "Nenhum resultado encontrado" << endl;
+            return;
+        }
 
         Pessoa *pessoa = new Pessoa(result[1], stoi(result[2]), result[3], result[4]);
         
-         
+        MyBtn *updateBtn = new MyBtn(320 , 360, 120, 30, "Update");
+        MyBtn *deleteBtn = new MyBtn(460, 360, 120, 30, "Delete");
+
+        MyBox *columnsBox = new MyBox(20, 60, 560, 300);
+        
+
+        wdw->add(columnsBox);
+        wdw->add(updateBtn);
+        wdw->add(deleteBtn);
+
+
         wdw->redraw();
     }
     else {
