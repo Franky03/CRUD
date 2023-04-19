@@ -1,5 +1,4 @@
 #include "Pessoa.h"
-#include <vector>
 #ifndef FUNCIONARIO_H
 #define FUNCIONARIO_H
 

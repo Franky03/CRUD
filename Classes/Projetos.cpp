@@ -2,14 +2,14 @@
 
 Projeto::Projeto() : Projeto("", "", 0){}
 
-Projeto::Projeto(string titulo, string descricao, int duracao){
-    setTitulo(titulo);
+Projeto::Projeto(string nome, string descricao, int duracao){
+    setNome(nome);
     setDescricao(descricao);
     setDuracao(duracao);
 }
 
-string Projeto::getTitulo(){
-    return titulo;
+string Projeto::getNome(){
+    return nome;
 }
 
 string Projeto::getDescricao(){
@@ -20,8 +20,8 @@ int Projeto::getDuracao(){
     return duracao;
 }
 
-void Projeto::setTitulo(string titulo){
-    this->titulo = titulo;
+void Projeto::setNome(string nome){
+    this->nome = nome;
 }
 
 void Projeto::setDescricao(string descricao){

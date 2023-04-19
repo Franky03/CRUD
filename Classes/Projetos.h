@@ -7,17 +7,17 @@ using namespace std;
 class Projeto {
     public:
         Projeto();
-        Projeto(string titulo, string descricao, int duracao);
+        Projeto(string nome, string descricao, int duracao);
         
-        string getTitulo();
+        string getNome();
         string getDescricao();
         int getDuracao();
-        void setTitulo(string titulo);
+        void setNome(string nome);
         void setDescricao(string descricao);
         void setDuracao(int duracao);
     
     private:
-        string titulo;
+        string nome;
         string descricao;
         int duracao;
 };

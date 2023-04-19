@@ -62,7 +62,7 @@ void CRUD::CreateDB(){
 
     const char *project_table = "CREATE TABLE IF NOT EXISTS PROJETO("
                                 "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                "titulo TEXT NOT NULL,"
+                                "nome TEXT NOT NULL,"
                                 "descricao TEXT NOT NULL,"
                                 "duracao INTEGER NOT NULL);";
     
@@ -164,7 +164,7 @@ void CRUD::createObj(string classe, vector<string> atributos){
         }
     }
     else if(classe == "PROJETO"){
-        sql += "titulo, descricao, duracao)";
+        sql += "nome, descricao, duracao)";
         values += "'" + atributos[0] + "', '" + atributos[1] + "', " + atributos[2] + ")";
     }
     else if(classe == "EQUIPAMENTO"){

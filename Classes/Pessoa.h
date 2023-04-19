@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #ifndef PESSOA_H
 #define PESSOA_H
 

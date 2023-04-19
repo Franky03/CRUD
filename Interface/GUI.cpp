@@ -33,6 +33,12 @@ struct PersonArgs {
   Pessoa *pessoa;
 };
 
+struct DeleteArgs {
+  Fl_Window* wdw;
+  string classe;
+  string id;
+};
+
 // Funções de callback
 
 void backCallBack(Fl_Widget *w, void *data) {
@@ -45,6 +51,17 @@ void backStartCallBack(Fl_Widget *w, void *data) {
   window->show();
   Fl_Window *new_window = static_cast<Fl_Window*>(data);
   new_window->hide();
+}
+
+void delete_callback(Fl_Widget* widget, void* data) {
+  DeleteArgs* args = static_cast<DeleteArgs*>(data);
+  Fl_Window* wdw = args->wdw;
+  string classe = args->classe;
+  string id = args->id;
+
+  crud->deleteObj(classe, id);
+  wdw->hide();
+  window->show();
 }
 
 void backButton(void *data){
@@ -72,7 +89,7 @@ void search_callback(Fl_Widget* widget, void* data)
     // Fazer algo com o termo de busca 
     // Se o o tamanho do termo de busca for maior que 0
     if(strlen(search_term) > 0){
-        vector<string> result = crud->readObj(classe, search_term); 
+        vector<string> result = crud->readObj(classe, search_term);  
         
         Fl_Window* wdw = search_box->window();
         
@@ -97,11 +114,19 @@ void search_callback(Fl_Widget* widget, void* data)
           pessoa = static_cast<Funcionario*>(pessoa);
           method_names = static_cast<Funcionario*>(pessoa)->getMethods();
         }
+        else if(classe=="CLIENTE"){
+          pessoa = static_cast<Cliente*>(pessoa);
+          method_names = static_cast<Cliente*>(pessoa)->getMethods(); 
+        }
+        else if(classe=="PESQUISADOR"){
+          pessoa = static_cast<Pesquisador*>(pessoa);
+          method_names = static_cast<Pesquisador*>(pessoa)->getMethods();
+        }
 
         for(int i = 0; i < method_names.size(); i++){
           //colocar um do lado do outro, mudando apenas x a partir do 30,270
           //mudar apenas o primeiro valor, colocando um do lado do outro
-          MyBtn *mthodBtn = new MyBtn(30 + (i*130), 270, 120, 30, method_names[i].c_str());
+          MyBtn *mthodBtn = new MyBtn(40 + (i*130), 270, 120, 30, method_names[i].c_str());
           cout << method_names[i] << endl;
           methodBtns.push_back(mthodBtn); 
 
@@ -109,6 +134,7 @@ void search_callback(Fl_Widget* widget, void* data)
 
         MyBtn *updateBtn = new MyBtn(320 , 360, 120, 30, "Update");
         MyBtn *deleteBtn = new MyBtn(460, 360, 120, 30, "Delete"); 
+        deleteBtn->callback(delete_callback, new DeleteArgs{wdw, classe, result[0]});
         
        
         wdw->add(table);
@@ -401,9 +427,13 @@ void ProjetoCallBack(Fl_Widget *w, void *data){
   projeto_window->show();
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv) { 
   // Criar tables se não existirem
   //crud->CreateDB();
+
+  //Criar um objeto para funcionario
+  //vector<string> data = {"Maria", "20", "065335874", "123456789", "000012456", "Faxineiro", "1000.34"};
+  //crud->createObj("FUNCIONARIO", data);
   
   //Window 
 

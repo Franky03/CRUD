@@ -23,3 +23,8 @@ string Cliente::getData(){
 void Cliente::setData(string data){
     this->data = data;
 }
+
+vector<string> Cliente::getMethods()
+{
+    return {"Reclamar", "Elogiar", "Esperar"};
+}

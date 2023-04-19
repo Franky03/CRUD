@@ -14,6 +14,7 @@ class Cliente : public Pessoa {
         void reclamar();
         void elogiar();
         void esperar();
+        vector<string> getMethods();
 
     private: 
         string encomenda;

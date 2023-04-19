@@ -1,6 +1,5 @@
 #include "Funcionario.h"
 #include "Projetos.h"
-#include <vector>
 
 using namespace std;
 
@@ -14,6 +13,7 @@ class Pesquisador : public Funcionario {
         void addProjeto(Projeto projeto);
         void removeProjeto(string titulo);
         vector<Projeto> getProjetos();
+        vector<string> getMethods();
 
     private:
         string area;

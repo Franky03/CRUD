@@ -19,9 +19,9 @@ void Pesquisador::addProjeto(Projeto projeto){
     projetos.push_back(projeto);
 }
 
-void Pesquisador::removeProjeto(string titulo){
+void Pesquisador::removeProjeto(string nome){
     for(int i; i<projetos.size(); i++){
-        if(projetos[i].getTitulo() == titulo){
+        if(projetos[i].getNome() == nome){
             projetos.erase(projetos.begin() + i);
             projetos.shrink_to_fit();
         }
@@ -30,4 +30,9 @@ void Pesquisador::removeProjeto(string titulo){
 
 vector<Projeto> Pesquisador::getProjetos(){
     return projetos;
+}
+
+vector<string> Pesquisador::getMethods()
+{
+    return {"Area", "AdicionarProjeto", "RemoverProjeto", "Projetos"};
 }
