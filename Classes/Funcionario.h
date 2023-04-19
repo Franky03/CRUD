@@ -1,4 +1,5 @@
 #include "Pessoa.h"
+#include <vector>
 #ifndef FUNCIONARIO_H
 #define FUNCIONARIO_H
 
@@ -16,8 +17,10 @@ class Funcionario : public Pessoa {
         float getSalario();
         void setSalario(float salario);
         double calcularSalarioAnual();
+        vector<string> getMethods();
         void trabalhar();
         void descansar();
+
             
     private:
         string codigo;

@@ -36,6 +36,11 @@ double Funcionario::calcularSalarioAnual()
     return this->salario * 12;
 }
 
+vector<string> Funcionario::getMethods()
+{
+    return {"SalarioAnual", "Trabalhar", "Descansar", "Trabalhando?"};
+}
+
 void Funcionario::trabalhar()
 {
     this->funcionarioTrabalhando = true;

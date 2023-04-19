@@ -5,6 +5,7 @@ using namespace std;
 MyWindow *window = new MyWindow(600,400, "BioLab");
 MyWindow *last_window = nullptr;
 
+
 // Banco de dados e CRUD
 sqlite3 *db;
 CRUD *crud = new CRUD(db);
@@ -80,18 +81,42 @@ void search_callback(Fl_Widget* widget, void* data)
             return;
         }
 
+        MyTable *table = new MyTable(20, 60, 560, 300, 11, 7);  
+        
+            
+        table->set_data(result, column_names);   
+        table->col_width_all(100);  
+        
+
         Pessoa *pessoa = new Pessoa(result[1], stoi(result[2]), result[3], result[4]);
-        
+        vector<MyBtn*> methodBtns;
+
+        vector<string> method_names;
+
+        if(classe=="FUNCIONARIO"){
+          pessoa = static_cast<Funcionario*>(pessoa);
+          method_names = static_cast<Funcionario*>(pessoa)->getMethods();
+        }
+
+        for(int i = 0; i < method_names.size(); i++){
+          //colocar um do lado do outro, mudando apenas x a partir do 30,270
+          //mudar apenas o primeiro valor, colocando um do lado do outro
+          MyBtn *mthodBtn = new MyBtn(30 + (i*130), 270, 120, 30, method_names[i].c_str());
+          cout << method_names[i] << endl;
+          methodBtns.push_back(mthodBtn); 
+
+        }
+
         MyBtn *updateBtn = new MyBtn(320 , 360, 120, 30, "Update");
-        MyBtn *deleteBtn = new MyBtn(460, 360, 120, 30, "Delete");
-
-        MyBox *columnsBox = new MyBox(20, 60, 560, 300);
+        MyBtn *deleteBtn = new MyBtn(460, 360, 120, 30, "Delete"); 
         
-
-        wdw->add(columnsBox);
+       
+        wdw->add(table);
         wdw->add(updateBtn);
         wdw->add(deleteBtn);
-
+        for(int i = 0; i < methodBtns.size(); i++){
+          wdw->add(methodBtns[i]);
+        }
 
         wdw->redraw();
     }

@@ -36,8 +36,10 @@ class MyTable : public Fl_Table {
             this->data = data;
             this->column_names = column_names;
             rows(data.size());
+            int total_height = table_size(1) + table_size(0) + rows() * table_size(2);
+            size(w(),200);
             redraw();
-        }
+}
     protected:
         void draw_cell(TableContext context, int row, int col, int x, int y, int w, int h) {
             switch ( context ) {
