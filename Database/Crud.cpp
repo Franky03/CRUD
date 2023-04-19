@@ -237,7 +237,7 @@ vector<string> CRUD::readObj(string classe, string nome){
     return result;
 }
 // Uma função para atualizar uma linha na tabela
-void CRUD::updateObj(string classe, int id, vector<string> atributos, vector<string> valores){
+void CRUD::updateObj(string classe, string id, vector<string> atributos, vector<string> valores){
 
     rc = sqlite3_open("mydb.db", &db);
 
@@ -258,7 +258,7 @@ void CRUD::updateObj(string classe, int id, vector<string> atributos, vector<str
     // remove a vírgula e o espaço no final da string de atualização
     sql = sql.substr(0, sql.length() - 2);
 
-    sql += " WHERE id = " + to_string(id) + ";";
+    sql += " WHERE id = " + id + ";";
 
     rc = sqlite3_exec(db, sql.c_str(), 0, 0, &err_msg); // executa a query
 
@@ -268,6 +268,30 @@ void CRUD::updateObj(string classe, int id, vector<string> atributos, vector<str
         sqlite3_close(db);
         exit(1);
     }
+}
+
+void CRUD::deleteObj(string classe, string id){
+    rc = sqlite3_open("mydb.db", &db);
+
+    if(rc != SQLITE_OK) {
+    cerr << "Can't open database: " << sqlite3_errmsg(db) << endl;
+    sqlite3_close(db);
+    exit(1);
+    }
+
+    string sql = "DELETE FROM " + classe + " WHERE id = " + id + ";";
+
+    rc = sqlite3_exec(db, sql.c_str(), 0, 0, &err_msg); // executa a query
+
+    if(rc != SQLITE_OK ) {
+        cerr << "SQL error: " << err_msg << endl;
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+        exit(1);
+    }
+
+    sqlite3_close(db);
+    cout << "Objeto deletado com sucesso!" << endl;
 }
 
 vector<string> CRUD::getColumnNames(string table_name){
