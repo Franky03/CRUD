@@ -39,6 +39,12 @@ struct DeleteArgs {
   string id;
 };
 
+void addImage(const char* file){
+  MyBox *imageBox = new MyBox(180, 70, 250, 250);
+  Fl_PNG_Image *image = new Fl_PNG_Image(file);
+  imageBox->image(image);
+}
+
 // Funções de callback
 
 void backCallBack(Fl_Widget *w, void *data) {
@@ -101,14 +107,15 @@ void search_callback(Fl_Widget* widget, void* data)
         MyTable *table = new MyTable(20, 60, 560, 300, 11, 7);  
         
             
-        table->set_data(result, column_names);   
-        table->col_width_all(100);  
+        table->set_data(result, column_names, false);   
+        table->col_width_all(100);
+        table->col_width(1, 200);
         
 
         Pessoa *pessoa = new Pessoa(result[1], stoi(result[2]), result[3], result[4]);
         vector<MyBtn*> methodBtns;
 
-        vector<string> method_names;
+        vector<string> method_names; 
 
         if(classe=="FUNCIONARIO"){
           pessoa = static_cast<Funcionario*>(pessoa);
@@ -155,6 +162,13 @@ void search_callback(Fl_Widget* widget, void* data)
 void create_callback(Fl_Widget* widget, void* data)
 {
     cout << "Create callback" << endl;
+    CreateArgs* args = static_cast<CreateArgs*>(data);
+    MyWindow* wdw = args->wdw;
+    string classe = args->classe;
+    vector<Fl_Input*> inputs = args->inputs;
+
+    // pegar os valores dos inputs e adicionar no vetor de string, daí passar para o crud create object 
+
 }
 
 void ReadAllCallBack(Fl_Widget*w, void *data){
@@ -347,6 +361,9 @@ void FuncionariosCallBack(Fl_Widget *w, void *data) {
 
   new_window->begin();
 
+  addImage("../src/funcionario.png");
+  
+
   crudBtns(new_window, "FUNCIONARIO");
 
   new_window->end();
@@ -363,7 +380,7 @@ void PesquisadoresCallBack(Fl_Widget *w, void *data) {
   readOne_window->begin();
 
   
-
+  addImage("../src/pesquisador.png");
   crudBtns(readOne_window, "PESQUISADOR");
 
 
@@ -379,6 +396,8 @@ void TecnicosCallBack(Fl_Widget *w, void *data) {
 
   tecnicos_window->begin();
 
+  addImage("../src/tecnicos.png");
+
   crudBtns(tecnicos_window, "TECNICO");
 
   tecnicos_window->end();
@@ -392,6 +411,8 @@ void ClienteCallBack(Fl_Widget *w, void *data) {
   window->hide();
 
   clientes_window->begin();
+
+  addImage("../src/clientes.png");
 
   crudBtns(clientes_window, "CLIENTE");
 
@@ -407,6 +428,8 @@ void EquipamentoCallBack(Fl_Widget *w, void *data){
 
   equipamento_window->begin();
 
+  addImage("../src/equipamentos.png");
+
   crudBtns(equipamento_window, "EQUIPAMENTO");
 
   equipamento_window->end();
@@ -421,6 +444,8 @@ void ProjetoCallBack(Fl_Widget *w, void *data){
 
   projeto_window->begin();
 
+
+  addImage("../src/projetos.png");
   crudBtns(projeto_window, "PROJETO");
 
   projeto_window->end();
@@ -441,10 +466,7 @@ int main(int argc, char **argv) {
   MyBox *viewBox = new MyBox(150, 20, 300, 60, "BioLab");
 
   //Image
-  MyBox *imageBox = new MyBox(180, 70, 250, 250);
-  Fl_PNG_Image *image = new Fl_PNG_Image("../src/rafik.png");
-  imageBox->image(image);
-
+  addImage("../src/rafik.png");
 
   MyBtn *readButton = new MyBtn(10, 300, 120, 30, "Funcionários");
   readButton->callback(FuncionariosCallBack, NULL);

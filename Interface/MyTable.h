@@ -32,12 +32,17 @@ class MyTable : public Fl_Table {
             end();               
         }
 
-        void set_data(vector<string> data, vector<string> column_names){
+        void set_data(vector<string> data, vector<string> column_names, bool readAll=true){
             this->data = data;
             this->column_names = column_names;
             rows(data.size());
             int total_height = table_size(1) + table_size(0) + rows() * table_size(2);
-            size(w(),200);
+            if(readAll){
+                size(w(), 270);
+            }
+            else {
+                size(w(),100);
+            }
             redraw();
 }
     protected:

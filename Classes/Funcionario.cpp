@@ -38,7 +38,7 @@ double Funcionario::calcularSalarioAnual()
 
 vector<string> Funcionario::getMethods()
 {
-    return {"SalarioAnual", "Trabalhar", "Descansar", "Trabalhando?"};
+    return {"SalarioAnual", "Trabalhar", "Descansar", "Trabalhando?", "AumentarSalario"};
 }
 
 void Funcionario::trabalhar()
@@ -51,3 +51,15 @@ void Funcionario::descansar()
     this->funcionarioTrabalhando = false;
 }
 
+void Funcionario::isTrabalhando()
+{
+    cout << "Trabalhando: " << (this->funcionarioTrabalhando ? "Sim" : "Não") << endl;
+}
+
+void Funcionario::aumentarSalario()
+{
+    float percentual;
+    cout << "Digite o percentual de aumento: ";
+    cin >> percentual;
+    this->salario += this->salario * (percentual);
+}
