@@ -80,94 +80,97 @@ void backButton(void *data){
 
 void search_callback(Fl_Widget* widget, void* data)
 {
-    // Aqui eu estou pegando os argumentos passados como um struct
-    // que vai ter um Fl_Input* e uma string como data
+  // Aqui eu estou pegando os argumentos passados como um struct
+  // que vai ter um Fl_Input* e uma string como data
 
-    InputArgs* args = static_cast<InputArgs*>(data);
-    // Aqui eu só estraí o input e a classe 
+  InputArgs* args = static_cast<InputArgs*>(data);
+  // Aqui eu só estraí o input e a classe  
 
-    Fl_Input* search_box = args->input;
-    string classe = args->classe;
+  Fl_Input* search_box = args->input;
+  string classe = args->classe;
 
-    vector<string> column_names = crud->getColumnNames(classe);  
-    const char* search_term = search_box->value();
+  vector<string> column_names = crud->getColumnNames(classe);  
+  const char* search_term = search_box->value();
 
-    // Fazer algo com o termo de busca 
-    // Se o o tamanho do termo de busca for maior que 0
-    if(strlen(search_term) > 0){
-        vector<string> result = crud->readObj(classe, search_term);  
-        
-        Fl_Window* wdw = search_box->window();
-        
-        if(result.size() == 0){
-            cout << "Nenhum resultado encontrado" << endl;
-            return;
-        }
+  // Fazer algo com o termo de busca 
+  // Se o o tamanho do termo de busca for maior que 0
+  if(strlen(search_term) > 0){
+      vector<string> result = crud->readObj(classe, search_term);  
+      
+      Fl_Window* wdw = search_box->window();
+      MyTable *table = new MyTable(20, 60, 560, 300, 11, 7); 
+      if(result.size() == 0){
+          cout << "Nenhum resultado encontrado" << endl;
+          
+          wdw->remove(table);
+          table = new MyTable(20, 60, 560, 300, 11, 7); 
+          table->set_data(result, column_names, false);
+          wdw->add(table);
+          wdw->redraw();
 
-        MyTable *table = new MyTable(20, 60, 560, 300, 11, 7);  
-        
-            
-        table->set_data(result, column_names, false);   
-        table->col_width_all(100);
-        table->col_width(1, 200);
-        
+          return;
+      }
+          
+      table->set_data(result, column_names, false);   
+      table->col_width_all(100);
+      table->col_width(1, 200);
+      
 
-        Pessoa *pessoa = new Pessoa(result[1], stoi(result[2]), result[3], result[4]);
-        vector<MyBtn*> methodBtns;
+      Pessoa *pessoa = new Pessoa(result[1], stoi(result[2]), result[3], result[4]);
+      vector<MyBtn*> methodBtns;
 
-        vector<string> method_names; 
+      vector<string> method_names; 
 
-        if(classe=="FUNCIONARIO"){
-          pessoa = static_cast<Funcionario*>(pessoa);
-          method_names = static_cast<Funcionario*>(pessoa)->getMethods();
-        }
-        else if(classe=="CLIENTE"){
-          pessoa = static_cast<Cliente*>(pessoa);
-          method_names = static_cast<Cliente*>(pessoa)->getMethods(); 
-        }
-        else if(classe=="PESQUISADOR"){
-          pessoa = static_cast<Pesquisador*>(pessoa);
-          method_names = static_cast<Pesquisador*>(pessoa)->getMethods();
-        }
+      if(classe=="FUNCIONARIO"){
+        pessoa = static_cast<Funcionario*>(pessoa);
+        method_names = static_cast<Funcionario*>(pessoa)->getMethods();
+      }
+      else if(classe=="CLIENTE"){
+        pessoa = static_cast<Cliente*>(pessoa);
+        method_names = static_cast<Cliente*>(pessoa)->getMethods(); 
+      }
+      else if(classe=="PESQUISADOR"){
+        pessoa = static_cast<Pesquisador*>(pessoa);
+        method_names = static_cast<Pesquisador*>(pessoa)->getMethods();
+      }
 
-        for(int i = 0; i < method_names.size(); i++){
-          //colocar um do lado do outro, mudando apenas x a partir do 30,270
-          //mudar apenas o primeiro valor, colocando um do lado do outro
-          MyBtn *mthodBtn = new MyBtn(40 + (i*130), 270, 120, 30, method_names[i].c_str());
-          cout << method_names[i] << endl;
-          methodBtns.push_back(mthodBtn); 
+      for(int i = 0; i < method_names.size(); i++){
+        //colocar um do lado do outro, mudando apenas x a partir do 30,270
+        //mudar apenas o primeiro valor, colocando um do lado do outro
+        MyBtn *mthodBtn = new MyBtn(40 + (i*130), 270, 120, 30, method_names[i].c_str());
+        cout << method_names[i] << endl;
+        methodBtns.push_back(mthodBtn); 
 
-        }
+      }
 
-        MyBtn *updateBtn = new MyBtn(320 , 360, 120, 30, "Update");
-        MyBtn *deleteBtn = new MyBtn(460, 360, 120, 30, "Delete"); 
-        deleteBtn->callback(delete_callback, new DeleteArgs{wdw, classe, result[0]});
-        
-       
-        wdw->add(table);
-        wdw->add(updateBtn);
-        wdw->add(deleteBtn);
-        for(int i = 0; i < methodBtns.size(); i++){
-          wdw->add(methodBtns[i]);
-        }
+      MyBtn *updateBtn = new MyBtn(320 , 360, 120, 30, "Update");
+      MyBtn *deleteBtn = new MyBtn(460, 360, 120, 30, "Delete"); 
+      deleteBtn->callback(delete_callback, new DeleteArgs{wdw, classe, result[0]});
+      
+      
+      wdw->add(table);
+      wdw->add(updateBtn);
+      wdw->add(deleteBtn);
+      for(int i = 0; i < methodBtns.size(); i++){
+        wdw->add(methodBtns[i]);
+      }
 
-        wdw->redraw();
-    }
-    else {
-        cout << "Digite um termo de busca" << endl;
-    }
-    
+      wdw->redraw();
+  }
+  else
+      cout << "Digite um termo de busca" << endl;
+  
 }
 
 void create_callback(Fl_Widget* widget, void* data)
 {
-    cout << "Create callback" << endl;
-    CreateArgs* args = static_cast<CreateArgs*>(data);
-    MyWindow* wdw = args->wdw;
-    string classe = args->classe;
-    vector<Fl_Input*> inputs = args->inputs;
+  cout << "Create callback" << endl;
+  CreateArgs* args = static_cast<CreateArgs*>(data);
+  MyWindow* wdw = args->wdw;
+  string classe = args->classe;
+  vector<Fl_Input*> inputs = args->inputs;
 
-    // pegar os valores dos inputs e adicionar no vetor de string, daí passar para o crud create object 
+  // pegar os valores dos inputs e adicionar no vetor de string, daí passar para o crud create object 
 
 }
 
@@ -454,10 +457,10 @@ void ProjetoCallBack(Fl_Widget *w, void *data){
 
 int main(int argc, char **argv) { 
   // Criar tables se não existirem
-  //crud->CreateDB();
+  //crud->CreateDB(); 
 
   //Criar um objeto para funcionario
-  //vector<string> data = {"Maria", "20", "065335874", "123456789", "000012456", "Faxineiro", "1000.34"};
+  //vector<string> data = {"jorge", "21", "066274874", "674764256789", "0016", "Faxineiro", "1000.34"};
   //crud->createObj("FUNCIONARIO", data);
   
   //Window 
