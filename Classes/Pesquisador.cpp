@@ -2,7 +2,7 @@
 
 Pesquisador::Pesquisador() : Pesquisador("", 0, "", "", "", "", 0, ""){}
 
-Pesquisador::Pesquisador(string nome, int idade, string cpf, string telefone,  string codigo, string cargo, float salario, string area)
+Pesquisador::Pesquisador(string nome, int idade, string cpf, string telefone,  string codigo, string cargo, float salario, string area="Pesquisa")
 : Funcionario(nome, idade, cpf, telefone, codigo, cargo, salario){
     setArea(area);
 }
@@ -34,5 +34,5 @@ vector<Projeto> Pesquisador::getProjetos(){
 
 vector<string> Pesquisador::getMethods()
 {
-    return {"Area", "AdicionarProjeto", "RemoverProjeto", "Projetos"};
+    return {"Area", "AddProjeto", "RemoveProjeto", "Projetos"};
 }

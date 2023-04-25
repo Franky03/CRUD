@@ -14,6 +14,8 @@ CRUD *crud = new CRUD(db);
 struct CallbackArgs {
   MyWindow* window;
   string classe;
+  bool create;
+  string id;
 };
 struct InputArgs {
   MyWindow* wdw;
@@ -25,6 +27,7 @@ struct CreateArgs {
   MyWindow* wdw;
   string classe;
   vector<Fl_Input*> inputs;
+  string id;
 };
 
 struct PersonArgs {
@@ -38,6 +41,8 @@ struct DeleteArgs {
   string classe;
   string id;
 };
+
+void CreateCallBack(Fl_Widget *w, void *data);
 
 void addImage(const char* file){
   MyBox *imageBox = new MyBox(180, 70, 250, 250);
@@ -96,6 +101,7 @@ void search_callback(Fl_Widget* widget, void* data)
   // Se o o tamanho do termo de busca for maior que 0
   if(strlen(search_term) > 0){
       vector<string> result = crud->readObj(classe, search_term);  
+      vector<MyBtn*> methodBtns;
       
       Fl_Window* wdw = search_box->window();
       MyTable *table = new MyTable(20, 60, 560, 300, 11, 7); 
@@ -106,6 +112,7 @@ void search_callback(Fl_Widget* widget, void* data)
           table = new MyTable(20, 60, 560, 300, 11, 7); 
           table->set_data(result, column_names, false);
           wdw->add(table);
+          
           wdw->redraw();
 
           return;
@@ -117,33 +124,64 @@ void search_callback(Fl_Widget* widget, void* data)
       
 
       Pessoa *pessoa = new Pessoa(result[1], stoi(result[2]), result[3], result[4]);
-      vector<MyBtn*> methodBtns;
 
       vector<string> method_names; 
 
       if(classe=="FUNCIONARIO"){
         pessoa = static_cast<Funcionario*>(pessoa);
         method_names = static_cast<Funcionario*>(pessoa)->getMethods();
+
+        if(result.size() != 0){
+    
+          MyBtn *salarioAnual = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
+          
+          wdw->add(salarioAnual);
+          MyBtn *trabalharBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
+          
+          wdw->add(trabalharBtn);
+          MyBtn *descansarBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
+          
+          wdw->add(descansarBtn);
+          MyBtn *isTrabalhando =  new MyBtn(430, 270, 120, 30, method_names[3].c_str());
+          
+          wdw->add(isTrabalhando);
+          MyBtn *aumentarSalario = new MyBtn(40, 310, 120, 30, method_names[4].c_str());
+          
+          wdw->add(aumentarSalario);
+        }
+
       }
       else if(classe=="CLIENTE"){
+        // "Reclamar", "Elogiar", "Esperar" 
         pessoa = static_cast<Cliente*>(pessoa);
         method_names = static_cast<Cliente*>(pessoa)->getMethods(); 
+        MyBtn *reclamarBtn = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
+        wdw->add(reclamarBtn);
+        MyBtn *elogiarBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
+        wdw->add(elogiarBtn);
+        MyBtn *esperarBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
+        wdw->add(esperarBtn);
+        
       }
       else if(classe=="PESQUISADOR"){
+        // "Area", "AdicionarProjeto", "RemoverProjeto", "Projetos"
         pessoa = static_cast<Pesquisador*>(pessoa);
         method_names = static_cast<Pesquisador*>(pessoa)->getMethods();
+        MyBtn *areaBtn = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
+        wdw->add(areaBtn);
+
+        MyBtn *adicionarProjetoBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
+        wdw->add(adicionarProjetoBtn);
+        MyBtn *removerProjetoBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
+        wdw->add(removerProjetoBtn);
+        MyBtn *projetosBtn = new MyBtn(430, 270, 120, 30, method_names[3].c_str());
+        wdw->add(projetosBtn);
+
       }
 
-      for(int i = 0; i < method_names.size(); i++){
-        //colocar um do lado do outro, mudando apenas x a partir do 30,270
-        //mudar apenas o primeiro valor, colocando um do lado do outro
-        MyBtn *mthodBtn = new MyBtn(40 + (i*130), 270, 120, 30, method_names[i].c_str());
-        cout << method_names[i] << endl;
-        methodBtns.push_back(mthodBtn); 
-
-      }
 
       MyBtn *updateBtn = new MyBtn(320 , 360, 120, 30, "Update");
+      updateBtn->callback(CreateCallBack, new CallbackArgs{static_cast<MyWindow*>(wdw), classe, false, result[0]});
       MyBtn *deleteBtn = new MyBtn(460, 360, 120, 30, "Delete"); 
       deleteBtn->callback(delete_callback, new DeleteArgs{wdw, classe, result[0]});
       
@@ -151,9 +189,6 @@ void search_callback(Fl_Widget* widget, void* data)
       wdw->add(table);
       wdw->add(updateBtn);
       wdw->add(deleteBtn);
-      for(int i = 0; i < methodBtns.size(); i++){
-        wdw->add(methodBtns[i]);
-      }
 
       wdw->redraw();
   }
@@ -172,6 +207,52 @@ void create_callback(Fl_Widget* widget, void* data)
 
   // pegar os valores dos inputs e adicionar no vetor de string, daí passar para o crud create object 
 
+}
+
+void cancel_callback(Fl_Widget* widget, void* data)
+{
+  MyWindow* wdw = static_cast<MyWindow*>(data);
+  wdw->hide();
+  window->show();
+}
+
+void update_callback(Fl_Widget* widget, void* data)
+{
+
+  CreateArgs* args = static_cast<CreateArgs*>(data);
+  MyWindow* wdw = args->wdw;
+  string classe = args->classe;
+  vector<Fl_Input*> inputs = args->inputs;
+
+  string id = args->id;
+  
+  vector<string> values;
+  vector<string> column_names = crud->getColumnNames(classe);
+  // tirei o primeiro elemento da lista, pois é o id
+  column_names.erase(column_names.begin());
+
+  for(int i = 0; i < inputs.size(); i++)
+  {
+    string val = inputs[i]->value();
+    if(strlen(val.c_str()) != 0)
+      values.push_back(val);
+    else
+      values.push_back("NULL");
+  }
+  //Uma solução seria percorrer os vetores de trás para frente e remover os elementos "NULL". 
+  //Dessa forma, você não terá problemas de índice, pois os elementos que já foram verificados não mudarão de posição.
+  for(int i = values.size() - 1; i >= 0; i--)
+  {
+    if(values[i] == "NULL"){
+      values.erase(values.begin() + i);
+      column_names.erase(column_names.begin() + i);
+    }
+  }
+  
+  crud->updateObj(classe,id,column_names, values);
+  
+  wdw->hide();
+  window->show();
 }
 
 void ReadAllCallBack(Fl_Widget*w, void *data){
@@ -242,6 +323,8 @@ void CreateCallBack(Fl_Widget*w, void *data){
   CallbackArgs *args = static_cast<CallbackArgs*>(data);
   MyWindow *new_window = args->window;
   string classe = args->classe;
+  bool create = args->create;
+  string id = args->id;
 
   CreateArgs *createArgs = new CreateArgs{};
   createArgs->wdw = create_window;
@@ -326,9 +409,20 @@ void CreateCallBack(Fl_Widget*w, void *data){
     }
   }
 
-  backButton(create_window);
-  MyBtn *createBtn = new MyBtn(460, 360, 100, 30, "Criar");
-  createBtn->callback(create_callback, createArgs);
+  if(create){
+    backButton(create_window);
+    MyBtn *createBtn = new MyBtn(460, 360, 100, 30, "Criar");
+    createBtn->callback(create_callback, createArgs);
+  }
+  else{
+    MyBtn *cancelBtn = new MyBtn(10, 360, 100, 30, "Cancelar");
+    // criar uma função dentro da chamada do callback para esconder essa janela e abrir a window
+    cancelBtn->callback(cancel_callback, create_window);
+    MyBtn *updateBtn = new MyBtn(460, 360, 100, 30, "Atualizar");
+    createArgs->id = id;
+    updateBtn->callback(update_callback, createArgs);
+  }
+  
 
   create_window->end();
   create_window->show();
@@ -340,7 +434,7 @@ void crudBtns(void* data, string classe){
   
   MyWindow *new_window = static_cast<MyWindow*>(data);
   // Aqui eu crio um struct que vai ter o ponteiro para a janela e a classe que eu quero
-  CallbackArgs *args = new CallbackArgs{new_window, classe};
+  CallbackArgs *args = new CallbackArgs{new_window, classe, true};
 
   MyBtn *backBtn = new MyBtn(10, 360, 120, 30, "Back");
   backBtn->callback(backStartCallBack, new_window);
@@ -367,7 +461,7 @@ void FuncionariosCallBack(Fl_Widget *w, void *data) {
   addImage("../src/funcionario.png");
   
 
-  crudBtns(new_window, "FUNCIONARIO");
+  crudBtns(new_window, "FUNCIONARIO"); 
 
   new_window->end();
   new_window->show(); 
@@ -455,6 +549,11 @@ void ProjetoCallBack(Fl_Widget *w, void *data){
   projeto_window->show();
 }
 
+ void RelatorioCallBack(Fl_Widget *w, void *data)
+ { 
+  cout << "Relatorio" << endl; 
+}
+
 int main(int argc, char **argv) { 
   // Criar tables se não existirem
   //crud->CreateDB(); 
@@ -462,7 +561,9 @@ int main(int argc, char **argv) {
   //Criar um objeto para funcionario
   //vector<string> data = {"jorge", "21", "066274874", "674764256789", "0016", "Faxineiro", "1000.34"};
   //crud->createObj("FUNCIONARIO", data);
-  
+  //string nome, int idade, string cpf, string telefone,  string codigo, string cargo, float salario, string area
+  //vector<string> data = {"jorge", "21", "066274874", "674764256789", "0016", "Pleno", "1000.34", "Pesquisa"};
+  //crud->createObj("PESQUISADOR", data);
   //Window 
 
   //Box
@@ -485,6 +586,8 @@ int main(int argc, char **argv) {
   MyBtn *projetosBtn = new MyBtn(310, 360, 120, 30, "Projetos");
   projetosBtn->callback(ProjetoCallBack, NULL);
  
+ MyBtn *relatorioBtn = new MyBtn(470, 360, 120, 30, "Relatório"); 
+ relatorioBtn->callback(RelatorioCallBack, NULL); 
 
   window->end();
   window->show(argc, argv);

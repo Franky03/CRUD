@@ -268,6 +268,9 @@ void CRUD::updateObj(string classe, string id, vector<string> atributos, vector<
         sqlite3_close(db);
         exit(1);
     }
+
+    sqlite3_close(db);
+    cout << "Objeto atualizado com sucesso!" << endl;
 }
 
 void CRUD::deleteObj(string classe, string id){
