@@ -20,7 +20,7 @@ class Funcionario : public Pessoa {
         vector<string> getMethods();
         void trabalhar();
         void descansar();
-        void isTrabalhando();
+        string isTrabalhando();
 
             
     private:

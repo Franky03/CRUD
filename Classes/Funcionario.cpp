@@ -51,9 +51,9 @@ void Funcionario::descansar()
     this->funcionarioTrabalhando = false;
 }
 
-void Funcionario::isTrabalhando()
+string Funcionario::isTrabalhando()
 {
-    cout << "Trabalhando: " << (this->funcionarioTrabalhando ? "Sim" : "Não") << endl;
+    return this->funcionarioTrabalhando ? "Sim" : "Não";
 }
 
 void Funcionario::aumentarSalario()

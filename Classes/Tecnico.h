@@ -14,6 +14,7 @@ class Tecnico : public Funcionario {
         vector<Equipamento> getEquipamentos();
         void addEquipamento(Equipamento equipamento);
         void removeEquipamento(int num_serie);
+        vector<string> getMethods();
     
     private:
         string area;

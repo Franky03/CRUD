@@ -82,6 +82,16 @@ void backButton(void *data){
   backBtn->callback(backCallBack, new_window);
 }
 
+// verificar quall classe é e transformar no objeto da classe, depois fazer o cout
+void out_callback(Fl_Widget* widget, void*data){
+  string* str_ptr = reinterpret_cast<string*>(data);
+  string str_value = *str_ptr;
+  cout << str_value << endl;
+}
+
+void set_callback(Fl_Widget* widget, void*data){
+
+}
 
 void search_callback(Fl_Widget* widget, void* data)
 {
@@ -128,33 +138,34 @@ void search_callback(Fl_Widget* widget, void* data)
       vector<string> method_names; 
 
       if(classe=="FUNCIONARIO"){
-        pessoa = static_cast<Funcionario*>(pessoa);
-        method_names = static_cast<Funcionario*>(pessoa)->getMethods();
-
-        if(result.size() != 0){
+        Funcionario *funcionario = new Funcionario(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]));
+        method_names = funcionario->getMethods();
     
-          MyBtn *salarioAnual = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
-          
-          wdw->add(salarioAnual);
-          MyBtn *trabalharBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
-          
-          wdw->add(trabalharBtn);
-          MyBtn *descansarBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
-          
-          wdw->add(descansarBtn);
-          MyBtn *isTrabalhando =  new MyBtn(430, 270, 120, 30, method_names[3].c_str());
-          
-          wdw->add(isTrabalhando);
-          MyBtn *aumentarSalario = new MyBtn(40, 310, 120, 30, method_names[4].c_str());
-          
-          wdw->add(aumentarSalario);
-        }
+        MyBtn *salarioAnual = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
+        
+        wdw->add(salarioAnual);
+        MyBtn *trabalharBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
+        
+        wdw->add(trabalharBtn);
+        MyBtn *descansarBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
+        
+        wdw->add(descansarBtn);
+        MyBtn *isTrabalhando =  new MyBtn(430, 270, 120, 30, method_names[3].c_str());
+  
+        string *working = new string("Funcionário Trabalhando ?: " + funcionario->isTrabalhando());
+        isTrabalhando->callback(out_callback, working);
+        
+        wdw->add(isTrabalhando);
+        MyBtn *aumentarSalario = new MyBtn(40, 310, 120, 30, method_names[4].c_str());
+        
+        wdw->add(aumentarSalario);
+        
 
       }
       else if(classe=="CLIENTE"){
         // "Reclamar", "Elogiar", "Esperar" 
-        pessoa = static_cast<Cliente*>(pessoa);
-        method_names = static_cast<Cliente*>(pessoa)->getMethods(); 
+        Cliente *cliente = new Cliente(result[1], stoi(result[2]), result[3], result[4], result[5], result[6]);
+        method_names = cliente->getMethods();
         MyBtn *reclamarBtn = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
         wdw->add(reclamarBtn);
         MyBtn *elogiarBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
@@ -164,10 +175,15 @@ void search_callback(Fl_Widget* widget, void* data)
         
       }
       else if(classe=="PESQUISADOR"){
-        // "Area", "AdicionarProjeto", "RemoverProjeto", "Projetos"
-        pessoa = static_cast<Pesquisador*>(pessoa);
-        method_names = static_cast<Pesquisador*>(pessoa)->getMethods();
+  
+        Pesquisador *pesquisador = new Pesquisador(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]), result[8]);
+        
+        method_names = pesquisador->getMethods();
         MyBtn *areaBtn = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
+
+        string *area = new string("Área: " + pesquisador->getArea());
+        
+        areaBtn->callback(out_callback, area);
         wdw->add(areaBtn);
 
         MyBtn *adicionarProjetoBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
@@ -176,6 +192,20 @@ void search_callback(Fl_Widget* widget, void* data)
         wdw->add(removerProjetoBtn);
         MyBtn *projetosBtn = new MyBtn(430, 270, 120, 30, method_names[3].c_str());
         wdw->add(projetosBtn);
+
+      }
+
+      else if(classe=="TECNICO"){
+        Tecnico *tecnico = new Tecnico(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]), result[8]);
+        method_names = tecnico->getMethods();
+
+        //"Area", "Equipamentos", "AddEquipamento", "RemoveEquipamento"
+        MyBtn *areaBtn = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
+        string *area = new string("Área: " + tecnico->getArea());
+
+        areaBtn->callback(out_callback, area);
+        
+        wdw->add(areaBtn);
 
       }
 
@@ -564,6 +594,9 @@ int main(int argc, char **argv) {
   //string nome, int idade, string cpf, string telefone,  string codigo, string cargo, float salario, string area
   //vector<string> data = {"jorge", "21", "066274874", "674764256789", "0016", "Pleno", "1000.34", "Pesquisa"};
   //crud->createObj("PESQUISADOR", data);
+  //Tecnico(string nome, int idade, string cpf, string telefone, string codigo, string cargo, float salario, string area)
+  //vector<string> data = {"jorge", "21", "066274874", "674764256789", "0016", "Pleno", "1000.34", "Pesquisa"};
+  //crud->createObj("TECNICO", data);
   //Window 
 
   //Box
