@@ -1,6 +1,7 @@
 #include "Fl_All.h"
 
 using namespace std;
+
 // Janela principal
 MyWindow *window = new MyWindow(600,400, "BioLab");
 MyWindow *last_window = nullptr;
@@ -113,18 +114,25 @@ void search_callback(Fl_Widget* widget, void* data)
   string classe = args->classe;
 
   vector<string> column_names = crud->getColumnNames(classe);  
-  const char* search_term = search_box->value();
+  string search_term = search_box->value();
 
   // Fazer algo com o termo de busca 
   // Se o o tamanho do termo de busca for maior que 0
-  if(strlen(search_term) > 0){
+  if(search_term.size() > 0){
+      
       vector<string> result = crud->readObj(classe, search_term);  
       vector<MyBtn*> methodBtns;
+
+      // apagar o resultado do número de colunas até o final do vetor result
+      if(result.size()>column_names.size()){
+        result.erase(result.begin()+column_names.size(), result.end());
+      }
       
       Fl_Window* wdw = search_box->window();
-      MyTable *table = new MyTable(20, 60, 560, 300, 11, 7); 
+      
+      MyTable *table = new MyTable(20, 60, 560, 300);
       if(result.size() == 0){
-          cout << "Nenhum resultado encontrado" << endl;
+          cout << "Nenhum resultado encontrado" << endl; 
           
           wdw->remove(table);
           table = new MyTable(20, 60, 560, 300, 11, 7); 
@@ -135,7 +143,8 @@ void search_callback(Fl_Widget* widget, void* data)
 
           return;
       }
-          
+
+
       table->set_data(result, column_names, false);   
       table->col_width_all(100);
       table->col_width(1, 200);
@@ -148,7 +157,7 @@ void search_callback(Fl_Widget* widget, void* data)
       if(classe=="FUNCIONARIO"){
         Funcionario *funcionario = new Funcionario(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]));
         method_names = funcionario->getMethods();
-    
+        
         MyBtn *salarioAnual = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
         
         wdw->add(salarioAnual);
@@ -160,7 +169,7 @@ void search_callback(Fl_Widget* widget, void* data)
         wdw->add(descansarBtn);
         MyBtn *isTrabalhando =  new MyBtn(430, 270, 120, 30, method_names[3].c_str());
   
-        string *working = new string("Funcionário Trabalhando ?: " + funcionario->isTrabalhando());
+        string *working = new string("Funcionário Trabalhando ?: " + funcionario->isTrabalhando()); 
         isTrabalhando->callback(out_callback, working);
         
         wdw->add(isTrabalhando);
@@ -249,11 +258,18 @@ void create_callback(Fl_Widget* widget, void* data)
   cout << "Create callback" << endl;
   CreateArgs* args = static_cast<CreateArgs*>(data);
   MyWindow* wdw = args->wdw;
-  string classe = args->classe;
+  string classe = args->classe;  
   vector<Fl_Input*> inputs = args->inputs;
 
-  // pegar os valores dos inputs e adicionar no vetor de string, daí passar para o crud create object 
+  // pegar os valores dos inputs e adicionar no vetor de string, daí passar para o crud create object
+  vector<string> values;
+  for(int i=0; i<inputs.size(); i++)
+  {
+    string val = inputs[i]->value();
+    values.push_back(val);
+  }
 
+  crud->createObj(classe, values);
 }
 
 void cancel_callback(Fl_Widget* widget, void* data)
@@ -313,14 +329,17 @@ void ReadAllCallBack(Fl_Widget*w, void *data){
   new_window->hide();
   
 
-  readAll_window->begin();
+  readAll_window->begin(); 
 
   vector<string> column_names = crud->getColumnNames(classe);
   vector<string> result = crud->readAll(classe);
+
   MyTable *table = new MyTable(20, 60, 560, 300, 11, 7);
   table->set_data(result, column_names);
   table->col_width_all(100);
-  readAll_window->add(table);
+  table->col_width(1, 200); 
+   
+  readAll_window->add(table); 
   readAll_window->redraw();
   
 
@@ -627,16 +646,6 @@ int main(int argc, char **argv) {
   // Criar tables se não existirem
   //crud->CreateDB(); 
 
-  //Criar um objeto para funcionario
-  //vector<string> data = {"jorge", "21", "066274874", "674764256789", "0016", "Faxineiro", "1000.34"};
-  //crud->createObj("FUNCIONARIO", data);
-  //string nome, int idade, string cpf, string telefone,  string codigo, string cargo, float salario, string area
-  //vector<string> data = {"jorge", "21", "066274874", "674764256789", "0016", "Pleno", "1000.34", "Pesquisa"};
-  //crud->createObj("PESQUISADOR", data);
-  //Tecnico(string nome, int idade, string cpf, string telefone, string codigo, string cargo, float salario, string area)
-  //vector<string> data = {"jorge", "21", "066274874", "674764256789", "0016", "Pleno", "1000.34", "Pesquisa"};
-  //crud->createObj("TECNICO", data);
-  
   //Window
 
   //Box

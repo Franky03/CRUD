@@ -25,7 +25,7 @@ string capitalize(string text) {
 
 class MyTable : public Fl_Table {
     public:
-        MyTable(int x, int y, int w, int h, int c, int r,  const char *l = 0) : Fl_Table(x, y, w, h, l) {
+        MyTable(int x, int y, int w, int h, int c=11, int r=5,  const char *l = 0) : Fl_Table(x, y, w, h, l) {
             rows(r);             
             cols(c);          
                
@@ -35,8 +35,9 @@ class MyTable : public Fl_Table {
         void set_data(vector<string> data, vector<string> column_names, bool readAll=true){
             this->data = data;
             this->column_names = column_names;
-            rows(data.size());
-            int total_height = table_size(1) + table_size(0) + rows() * table_size(2);
+            int num_cols = column_names.size();
+            cols(num_cols); 
+            
             if(readAll){
                 size(w(), 270);
             }
@@ -56,7 +57,6 @@ class MyTable : public Fl_Table {
                     fl_push_clip(x, y, w, h);
                     fl_draw_box(FL_BORDER_BOX, x, y, w, h, col_header() ? row == 0 ? color() : FL_WHITE : color());
                     fl_color(FL_BLACK);
-                    //é pra colocar o botão somente se a linha for maior que 0 e se tiver conteudo naquela linha
                     
                     if (row == 0) {
                         // Desenhe o cabeçalho da coluna a partir da Coluna 1
@@ -68,22 +68,19 @@ class MyTable : public Fl_Table {
                         } catch (const std::out_of_range& e) {
                             fl_draw("", x+10, y, w-20, h, FL_ALIGN_LEFT);
                         }
-                        
-                        
-                    } else if (row == 1) {
-                        // Desenhe os dados da coluna na segunda linha da tabela a partir da Coluna 1
-                        int data_index = col ;
-                        try {
-                            fl_draw(data.at(data_index).c_str(), x+10, y, w-20, h, FL_ALIGN_LEFT);
-                        } catch (const std::out_of_range& e) {
-                            fl_draw("", x+10, y, w-20, h, FL_ALIGN_LEFT);
-                        }
-                        
                     } else {
-                        // Desenhe um espaço vazio para todas as outras linhas da tabela a partir da Coluna 1
-                        
-                        fl_draw("", x+10, y, w-20, h, FL_ALIGN_LEFT);
-                        
+                        int data_index = (row-1)*cols() + col;
+                        if(data_index < data.size()){
+                            fl_draw(data.at(data_index).c_str(), x+10, y, w-20, h, FL_ALIGN_LEFT);
+                        } else {
+                            if(col < cols()-1){
+                                fl_draw("", x+10, y, w-20, h, FL_ALIGN_LEFT);
+                            }
+                            else {
+                                fl_pop_clip();
+                                return;
+                            }
+                        }
                     }
                     
                     
@@ -101,4 +98,5 @@ class MyTable : public Fl_Table {
     private:
         vector<string> data;
         vector<string> column_names;
+        
 };
