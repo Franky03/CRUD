@@ -15,6 +15,7 @@ struct CallbackArgs {
   MyWindow* window;
   string classe;
   bool create;
+  bool from_ro;
   string id;
 };
 struct InputArgs {
@@ -91,6 +92,13 @@ void out_callback(Fl_Widget* widget, void*data){
 
 void set_callback(Fl_Widget* widget, void*data){
 
+}
+
+void remove_any_callback(Fl_Widget* widget, void*data){
+  cout << "Nome para remover: ";
+  string nome;
+  getline(cin, nome);
+  cout << nome << " foi removido" << endl;
 }
 
 void search_callback(Fl_Widget* widget, void* data)
@@ -185,25 +193,34 @@ void search_callback(Fl_Widget* widget, void* data)
         
         areaBtn->callback(out_callback, area);
         wdw->add(areaBtn);
-
-        MyBtn *adicionarProjetoBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
-        wdw->add(adicionarProjetoBtn);
-        MyBtn *removerProjetoBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
-        wdw->add(removerProjetoBtn);
-        MyBtn *projetosBtn = new MyBtn(430, 270, 120, 30, method_names[3].c_str());
+        MyBtn *projetosBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
         wdw->add(projetosBtn);
+        MyBtn *adicionarProjetoBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
+        adicionarProjetoBtn->callback(CreateCallBack, new CallbackArgs{static_cast<MyWindow*>(wdw), "PROJETO", true, true,result[0]});
+        wdw->add(adicionarProjetoBtn);
+        MyBtn *removerProjetoBtn = new MyBtn(430, 270, 120, 30, method_names[3].c_str());
+        removerProjetoBtn->callback(remove_any_callback, NULL);
+        wdw->add(removerProjetoBtn);
+        
 
       }
 
       else if(classe=="TECNICO"){
         Tecnico *tecnico = new Tecnico(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]), result[8]);
         method_names = tecnico->getMethods();
-
         //"Area", "Equipamentos", "AddEquipamento", "RemoveEquipamento"
         MyBtn *areaBtn = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
         string *area = new string("Área: " + tecnico->getArea());
-
         areaBtn->callback(out_callback, area);
+        MyBtn *equipamentosBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
+        wdw->add(equipamentosBtn);
+        MyBtn *addEquipamentoBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
+        addEquipamentoBtn->callback(CreateCallBack, new CallbackArgs{static_cast<MyWindow*>(wdw), "EQUIPAMENTO", true, true,result[0]});
+        wdw->add(addEquipamentoBtn);
+
+        MyBtn *removeEquipamentoBtn = new MyBtn(430, 270, 120, 30, method_names[3].c_str());
+        removeEquipamentoBtn->callback(remove_any_callback, NULL);
+        wdw->add(removeEquipamentoBtn);
         
         wdw->add(areaBtn);
 
@@ -211,7 +228,7 @@ void search_callback(Fl_Widget* widget, void* data)
 
 
       MyBtn *updateBtn = new MyBtn(320 , 360, 120, 30, "Update");
-      updateBtn->callback(CreateCallBack, new CallbackArgs{static_cast<MyWindow*>(wdw), classe, false, result[0]});
+      updateBtn->callback(CreateCallBack, new CallbackArgs{static_cast<MyWindow*>(wdw), classe, false, false,result[0]});
       MyBtn *deleteBtn = new MyBtn(460, 360, 120, 30, "Delete"); 
       deleteBtn->callback(delete_callback, new DeleteArgs{wdw, classe, result[0]});
       
@@ -355,6 +372,7 @@ void CreateCallBack(Fl_Widget*w, void *data){
   string classe = args->classe;
   bool create = args->create;
   string id = args->id;
+  bool from_ro = args->from_ro;
 
   CreateArgs *createArgs = new CreateArgs{};
   createArgs->wdw = create_window;
@@ -421,6 +439,14 @@ void CreateCallBack(Fl_Widget*w, void *data){
       Fl_Input *duracaoInput = new Fl_Input(150, 90, 300, 30);
       InputStyle(duracaoInput, "Duração: ");
       createArgs->inputs.push_back(duracaoInput);
+      Fl_Input *pesquisadorResp = new Fl_Input(150, 130, 300, 30);
+      if(from_ro){
+        pesquisadorResp->value(id.c_str());
+        pesquisadorResp->deactivate();
+      }
+      InputStyle(pesquisadorResp, "Pesquisador: ");
+      createArgs->inputs.push_back(pesquisadorResp);
+      
     }
     else{
       Fl_Input *nomeInput = new Fl_Input(150, 10, 300, 30);
@@ -434,13 +460,26 @@ void CreateCallBack(Fl_Widget*w, void *data){
       createArgs->inputs.push_back(modelo);
       Fl_Input *disponivelInput = new Fl_Input(150, 130, 300, 30);
       InputStyle(disponivelInput, "Disponível: ");
-      createArgs->inputs.push_back(disponivelInput);  
+      createArgs->inputs.push_back(disponivelInput);
+      Fl_Input *tecnicoResp = new Fl_Input(150, 170, 300, 30);
+      if(from_ro){
+        tecnicoResp->value(id.c_str());
+        tecnicoResp->deactivate();
+      }
+      InputStyle(tecnicoResp, "Técnico: ");
+      createArgs->inputs.push_back(tecnicoResp);
 
     }
   }
 
   if(create){
-    backButton(create_window);
+    if(!from_ro){
+      backButton(create_window);
+    } else {
+      MyBtn *cancelBtn = new MyBtn(10, 360, 100, 30, "Cancelar");
+      cancelBtn->callback(cancel_callback, create_window);
+    }
+    
     MyBtn *createBtn = new MyBtn(460, 360, 100, 30, "Criar");
     createBtn->callback(create_callback, createArgs);
   }
@@ -597,7 +636,8 @@ int main(int argc, char **argv) {
   //Tecnico(string nome, int idade, string cpf, string telefone, string codigo, string cargo, float salario, string area)
   //vector<string> data = {"jorge", "21", "066274874", "674764256789", "0016", "Pleno", "1000.34", "Pesquisa"};
   //crud->createObj("TECNICO", data);
-  //Window 
+  
+  //Window
 
   //Box
   MyBox *viewBox = new MyBox(150, 20, 300, 60, "BioLab");

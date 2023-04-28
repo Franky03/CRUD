@@ -145,6 +145,7 @@ void CRUD::createObj(string classe, vector<string> atributos){
 
     string sql = "INSERT INTO " + classe + " (";
     string values = " VALUES (";
+    string sql2;
 
     if(classe != "PROJETO" && classe != "EQUIPAMENTO"){
         sql += "nome, idade, cpf, telefone";
@@ -166,10 +167,16 @@ void CRUD::createObj(string classe, vector<string> atributos){
     else if(classe == "PROJETO"){
         sql += "nome, descricao, duracao)";
         values += "'" + atributos[0] + "', '" + atributos[1] + "', " + atributos[2] + ")";
+
+        // Adicionar registro na tabela de relacionamento de projeto-pesquisador
+        sql2 = " INSERT INTO PROJETO_PESQUISADOR (id_projeto, id_pesquisador) VALUES ((SELECT MAX(id) FROM PROJETO), " + atributos[3]+ ")";
     }
     else if(classe == "EQUIPAMENTO"){
-        sql += "nome, num_serie, modelo, disponivel)",
+        sql += "nome, num_serie, modelo, disponivel)";
         values += "'" + atributos[0] + "', " + atributos[1] + ", '" + atributos[2] + "', " + atributos[3] + ")";
+
+        // Adicionar registro na tabela de relacionamento de tecnico-equipamento
+        sql2 = " INSERT INTO TECNICO_EQUIPAMENTO (id_tecnico, id_equipamento) VALUES ((SELECT MAX(id) FROM EQUIPAMENTO), " + atributos[4] + ")";
     }
 
     sql += values;
@@ -180,6 +187,16 @@ void CRUD::createObj(string classe, vector<string> atributos){
         sqlite3_free(err_msg);
         sqlite3_close(db);
         exit(1);
+    }
+
+    if(!sql2.empty()){
+        rc = sqlite3_exec(db, sql2.c_str(), 0, 0, &err_msg);
+        if(rc != SQLITE_OK ) {
+            cerr << "SQL error: " << err_msg << endl;
+            sqlite3_free(err_msg);
+            sqlite3_close(db);
+            exit(1);
+        }
     }
 
     sqlite3_close(db);

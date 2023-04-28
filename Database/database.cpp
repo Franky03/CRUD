@@ -25,106 +25,12 @@ int main(void){
 
     //Tabela de Funcionários
 
-    const char *func_table = "CREATE TABLE IF NOT EXISTS FUNCIONARIO("
-                             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                             "nome TEXT NOT NULL,"
-                             "idade INTEGER NOT NULL,"
-                             "cpf TEXT NOT NULL,"
-                             "telefone TEXT NOT NULL,"
-                             "codigo TEXT NOT NULL,"
-                             "cargo TEXT NOT NULL,"
-                             "salario REAL NOT NULL);";
-                             
-
-    Executar(func_table, db, err_msg, result);
-
-    //Tabela de Pesquisadores
-
-    const char *research_table = "CREATE TABLE IF NOT EXISTS PESQUISADOR("
-                                 "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                 "nome TEXT NOT NULL,"
-                                 "idade INTEGER NOT NULL,"
-                                 "cpf TEXT NOT NULL,"
-                                 "telefone TEXT NOT NULL,"
-                                 "codigo TEXT NOT NULL,"
-                                 "cargo TEXT NOT NULL,"
-                                 "salario REAL NOT NULL,"
-                                 "area TEXT NOT NULL);";
-
-    Executar(research_table, db, err_msg, result);
-
-    //Tabela de Projetos
-
-    const char *project_table = "CREATE TABLE IF NOT EXISTS PROJETO("
-                                "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                "titulo TEXT NOT NULL,"
-                                "descricao TEXT NOT NULL,"
-                                "duracao INTEGER NOT NULL);";
-    
-    Executar(project_table, db, err_msg, result);
-
-    //Tabela de Relacionamento
-
-    const char *project_researcher = "CREATE TABLE IF NOT EXISTS PROJETO_PESQUISADOR("
-                                     "id_projeto INTEGER NOT NULL,"
-                                     "id_pesquisador INTEGER NOT NULL,"
-                                     "FOREIGN KEY (id_projeto) REFERENCES PROJETO(id),"
-                                     "FOREIGN KEY (id_pesquisador) REFERENCES PESQUISADOR(id));";
-    
-    Executar(project_researcher, db, err_msg, result);
-
-    // Tabela de Técnicos
-
-    const char *tech_table = "CREATE TABLE IF NOT EXISTS TECNICO("
-                             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                             "nome TEXT NOT NULL,"
-                             "idade INTEGER NOT NULL,"
-                             "cpf TEXT NOT NULL,"
-                             "telefone TEXT NOT NULL,"
-                             "codigo TEXT NOT NULL,"
-                             "cargo TEXT NOT NULL,"
-                             "salario REAL NOT NULL,"
-                             "area TEXT NOT NULL);";
-
-    Executar(tech_table, db, err_msg, result);  
-
-    // Tabela de Equipamentos
-
-    const char *equip_table = "CREATE TABLE IF NOT EXISTS EQUIPAMENTO("
-                               "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                               "nome TEXT NOT NULL,"
-                               "num_serie INTEGER NOT NULL,"
-                               "modelo TEXT NOT NULL,"
-                               "disponivel BOOL NOT NULL);";
-    
-    Executar(equip_table, db, err_msg, result);
-
-    // Tabela de Relacionamento
-
-    const char *tech_equip = "CREATE TABLE IF NOT EXISTS TECNICO_EQUIPAMENTO("
-                             "id_tecnico INTEGER NOT NULL,"
-                             "id_equipamento INTEGER NOT NULL,"
-                             "FOREIGN KEY (id_tecnico) REFERENCES TECNICO(id),"
-                             "FOREIGN KEY (id_equipamento) REFERENCES EQUIPAMENTO(id));";
-    
-    Executar(tech_equip, db, err_msg, result);
-
-    const char *cliente_table = "CREATE TABLE IF NOT EXISTS CLIENTE("
-                                "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                "nome TEXT NOT NULL,"
-                                "idade INTEGER NOT NULL,"
-                                "cpf TEXT NOT NULL,"
-                                "telefone TEXT NOT NULL,"
-                                "encomenda TEXT NOT NULL,"
-                                "data TEXT NOT NULL);";
-
-    Executar(cliente_table, db, err_msg, result);
 
     cout << "Opened database successfully" << endl;
 
     CRUD myCrud = CRUD(db);
-    vector<string> data = {"Joao", "20", "065335874", "123456789", "000012456", "Faxineiro", "1000.34"};
-    myCrud.createObj("FUNCIONARIO", data);
+    myCrud.CreateDB();
+    
     vector<string> joao = myCrud.readObj("FUNCIONARIO", "Joao");
 
     vector<string> colunas =  myCrud.getColumnNames("FUNCIONARIO");
@@ -138,7 +44,7 @@ int main(void){
     //     cout << joao[i] << endl;
     // }
 
-    vector<string> data2 = {"Joao Silva", "1200.4"};
+    vector<string> data2 = {"Joao Silva", "1200.4"}; 
     vector<string> atributos = {"nome", "salario"};
 
     //myCrud.updateObj("FUNCIONARIO", 3, atributos, data2);
@@ -149,11 +55,11 @@ int main(void){
     //    cout << joao[i] << endl;
     //} 
 
-    vector<string> allread =  myCrud.readAll("FUNCIONARIO");
-
-    for(int i = 0; i < allread.size(); i++) {
-        cout << allread[i] << endl;
-    }
+    //vector<string> data = {"Projeto1", "Descricao1", "10", "1"};
+    //myCrud.createObj("PROJETO", data);
+    //nome, num_serie, modelo, disponivel
+    vector<string> data1 = {"Equipamento1", "1", "Modelo1", "1", "2"};
+    myCrud.createObj("EQUIPAMENTO", data1); 
     
     sqlite3_close(db);
 
