@@ -63,3 +63,8 @@ void Funcionario::aumentarSalario()
     cin >> percentual;
     this->salario += this->salario * (percentual);
 }
+
+void Funcionario::aumentarSalario(float percentual)
+{
+    this->salario += this->salario * (percentual);
+}

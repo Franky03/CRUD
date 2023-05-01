@@ -639,8 +639,10 @@ void ProjetoCallBack(Fl_Widget *w, void *data){
 
  void RelatorioCallBack(Fl_Widget *w, void *data)
  { 
-  cout << "Relatorio" << endl; 
-}
+    // cria um objeto template para cada classe
+    Relatorio<Funcionario> relatorioFuncionario = Relatorio<Funcionario>();
+ }
+
 
 int main(int argc, char **argv) { 
   // Criar tables se não existirem
@@ -668,8 +670,8 @@ int main(int argc, char **argv) {
   MyBtn *projetosBtn = new MyBtn(310, 360, 120, 30, "Projetos");
   projetosBtn->callback(ProjetoCallBack, NULL);
  
- MyBtn *relatorioBtn = new MyBtn(470, 360, 120, 30, "Relatório"); 
- relatorioBtn->callback(RelatorioCallBack, NULL); 
+  MyBtn *relatorioBtn = new MyBtn(470, 360, 120, 30, "Relatório"); 
+  relatorioBtn->callback(RelatorioCallBack, NULL); 
 
   window->end();
   window->show(argc, argv);

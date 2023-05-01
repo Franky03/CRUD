@@ -4,4 +4,4 @@
 #include "Pesquisador.h"
 #include "Projetos.h"
 #include "Equipamento.h"
-
+#include "Relatorio.h"
