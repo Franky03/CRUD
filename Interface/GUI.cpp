@@ -668,16 +668,18 @@ void RelatorioCallBack(Fl_Widget *w, void *data){
   // string nome, int idade, string cpf, string telefone, string codigo, string cargo, float salario
   vector<string> result;
   result = crud->readAll("FUNCIONARIO");
-  for(int i = 0; i < result.size(); i+=6){
-    // verificar se o result[i] é um id, se for, pular ele
-    Funcionario f = Funcionario(result[i+1], stoi(result[i+2]), result[i+3], result[i+4], result[i+5], result[i+6], stof(result[i+7]));
-    funcionarios.push_back(f);
+
+  // ele começa no 1, vai até o 8, daí ele começa no 9 e assim por diante
+  for(int i = 1; i < result.size(); i+=8){
+    Funcionario funcionario = Funcionario(result[i], stoi(result[i+1]), result[i+2], result[i+3], result[i+4], result[i+5], stof(result[i+6]));
+    funcionarios.push_back(funcionario);
   }
 
   cout << "Funcionarios: " << endl;
   for(int i = 0; i < funcionarios.size(); i++){
     cout << funcionarios[i].getNome() << endl;
   }
+
 }
 
 
