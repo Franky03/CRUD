@@ -95,6 +95,18 @@ void set_callback(Fl_Widget* widget, void*data){
 
 }
 
+void get_any_callback(Fl_Widget* widget, void*data){
+  CallbackArgs* args = static_cast<CallbackArgs*>(data);
+  string classe = args->classe;
+  string id = args->id;
+
+  vector<string> relations = crud->getRelation(classe, id);
+
+  for(int i = 0; i < relations.size(); i++) {
+    cout << relations[i] << endl;
+  }
+}
+
 void remove_any_callback(Fl_Widget* widget, void*data){
   cout << "Nome para remover: ";
   string nome;
@@ -203,6 +215,9 @@ void search_callback(Fl_Widget* widget, void* data)
         areaBtn->callback(out_callback, area);
         wdw->add(areaBtn);
         MyBtn *projetosBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
+        // resul[0]-> id do pesquisador 
+        CallbackArgs *args = new CallbackArgs{static_cast<MyWindow*>(wdw), "PROJETO", false, false,result[0]};
+        projetosBtn->callback(get_any_callback, args);
         wdw->add(projetosBtn);
         MyBtn *adicionarProjetoBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
         adicionarProjetoBtn->callback(CreateCallBack, new CallbackArgs{static_cast<MyWindow*>(wdw), "PROJETO", true, true,result[0]});
@@ -222,6 +237,8 @@ void search_callback(Fl_Widget* widget, void* data)
         string *area = new string("Área: " + tecnico->getArea());
         areaBtn->callback(out_callback, area);
         MyBtn *equipamentosBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
+        CallbackArgs *args = new CallbackArgs{static_cast<MyWindow*>(wdw), "EQUIPAMENTO", false, false, result[0]};
+        equipamentosBtn->callback(get_any_callback, args);
         wdw->add(equipamentosBtn);
         MyBtn *addEquipamentoBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
         addEquipamentoBtn->callback(CreateCallBack, new CallbackArgs{static_cast<MyWindow*>(wdw), "EQUIPAMENTO", true, true,result[0]});
@@ -485,7 +502,7 @@ void CreateCallBack(Fl_Widget*w, void *data){
         tecnicoResp->value(id.c_str());
         tecnicoResp->deactivate();
       }
-      InputStyle(tecnicoResp, "Técnico: ");
+      InputStyle(tecnicoResp, "Técnico(ID): ");
       createArgs->inputs.push_back(tecnicoResp);
 
     }
@@ -589,7 +606,7 @@ void TecnicosCallBack(Fl_Widget *w, void *data) {
   tecnicos_window->show();
 }
 
-void ClienteCallBack(Fl_Widget *w, void *data) {
+void ClienteCallBack(Fl_Widget *w, void *data){
   MyWindow* clientes_window = new MyWindow(600, 400, "Clientes");
   clientes_window->show();
   last_window = window;
@@ -637,11 +654,31 @@ void ProjetoCallBack(Fl_Widget *w, void *data){
   projeto_window->show();
 }
 
- void RelatorioCallBack(Fl_Widget *w, void *data)
- { 
-    // cria um objeto template para cada classe
-    Relatorio<Funcionario> relatorioFuncionario = Relatorio<Funcionario>();
- }
+void RelatorioCallBack(Fl_Widget *w, void *data){ 
+  // cria um objeto template para cada classe
+  Relatorio<Funcionario> relatorioFuncionario = Relatorio<Funcionario>();
+  Relatorio<Pesquisador> relatorioPesquisador = Relatorio<Pesquisador>();
+  Relatorio<Tecnico> relatorioTecnico = Relatorio<Tecnico>();
+  
+
+  vector<Funcionario> funcionarios;
+
+  // eu quero pegar todos os funcionarios pelo crud.readall e ir criando um um objeto para cada um deles e adicionando no vetor
+  // lembrar que a função readall ela também retorna o id, eu não quero adicionar o id
+  // string nome, int idade, string cpf, string telefone, string codigo, string cargo, float salario
+  vector<string> result;
+  result = crud->readAll("FUNCIONARIO");
+  for(int i = 0; i < result.size(); i+=6){
+    // verificar se o result[i] é um id, se for, pular ele
+    Funcionario f = Funcionario(result[i+1], stoi(result[i+2]), result[i+3], result[i+4], result[i+5], result[i+6], stof(result[i+7]));
+    funcionarios.push_back(f);
+  }
+
+  cout << "Funcionarios: " << endl;
+  for(int i = 0; i < funcionarios.size(); i++){
+    cout << funcionarios[i].getNome() << endl;
+  }
+}
 
 
 int main(int argc, char **argv) { 
@@ -654,7 +691,7 @@ int main(int argc, char **argv) {
   MyBox *viewBox = new MyBox(150, 20, 300, 60, "BioLab");
 
   //Image
-  addImage("../src/rafik.png");
+  addImage("../src/rafik.png"); 
 
   MyBtn *readButton = new MyBtn(10, 300, 120, 30, "Funcionários");
   readButton->callback(FuncionariosCallBack, NULL);
@@ -678,5 +715,5 @@ int main(int argc, char **argv) {
 
 
   return Fl::run();
-
+ 
 }

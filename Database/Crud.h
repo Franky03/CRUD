@@ -14,7 +14,7 @@ class CRUD {
         void updateObj(string classe, string id, vector<string> atributos, vector<string> valores);
         void deleteObj(string classe, string id);
         vector<string> getColumnNames(string classe);   
-        vector<string> getRelation(string classe, int id);
+        vector<string> getRelation(string classe, string id);
 
     
     private:

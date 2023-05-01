@@ -176,7 +176,7 @@ void CRUD::createObj(string classe, vector<string> atributos){
         values += "'" + atributos[0] + "', " + atributos[1] + ", '" + atributos[2] + "', " + atributos[3] + ")";
 
         // Adicionar registro na tabela de relacionamento de tecnico-equipamento
-        sql2 = " INSERT INTO TECNICO_EQUIPAMENTO (id_tecnico, id_equipamento) VALUES ((SELECT MAX(id) FROM EQUIPAMENTO), " + atributos[4] + ")";
+        sql2 = " INSERT INTO TECNICO_EQUIPAMENTO (id_equipamento, id_tecnico) VALUES ((SELECT MAX(id) FROM EQUIPAMENTO), " + atributos[4] + ")";
     }
 
     sql += values;
@@ -362,7 +362,7 @@ vector<string> CRUD::readAll(string classe){
     return result;
 }
 
-vector<string> CRUD::getRelation(string classe, int id){
+vector<string> CRUD::getRelation(string classe, string id){
     rc = sqlite3_open("mydb.db", &db);
 
     if(rc != SQLITE_OK) {
@@ -374,18 +374,19 @@ vector<string> CRUD::getRelation(string classe, int id){
     vector<string> result;
 
     if(classe == "PROJETO"){
-        relation =  "SELECT nome, descricao, duracao FROM PROJETO "
+        relation =  "SELECT DISTINCT nome, descricao, duracao FROM PROJETO "
                     "JOIN PROJETO_PESQUISADOR "
                     "ON PROJETO.id = PROJETO_PESQUISADOR.id_projeto "
                     "WHERE PROJETO_PESQUISADOR.id_pesquisador IN "
-                    "(SELECT id_pesquisador FROM PROJETO_PESQUISADOR WHERE id_projeto = " + to_string(id) + ");";
+                    "(SELECT id_pesquisador FROM PROJETO_PESQUISADOR WHERE id_projeto = " + id + ");";
 
     } else if(classe == "EQUIPAMENTO"){
-        relation =  "SELECT nome, num_serie, modelo, disponivel FROM EQUIPAMENTO "
+        cout << "entrou EQUIPAMENTO" << endl;
+        relation =  "SELECT DISTINCT nome, num_serie, modelo, disponivel FROM EQUIPAMENTO "
                     "JOIN TECNICO_EQUIPAMENTO "
                     "ON EQUIPAMENTO.id = TECNICO_EQUIPAMENTO.id_equipamento "
                     "WHERE TECNICO_EQUIPAMENTO.id_tecnico IN "
-                    "(SELECT id_tecnico FROM TECNICO_EQUIPAMENTO WHERE id_equipamento = " + to_string(id) + ");";
+                    "(SELECT id_tecnico FROM TECNICO_EQUIPAMENTO WHERE id_equipamento = " + id + ");";
     }
 
     rc = sqlite3_exec(db, relation.c_str(), searchByNameCallBack, &result, &err_msg);
