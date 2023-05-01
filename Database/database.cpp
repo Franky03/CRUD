@@ -58,12 +58,20 @@ int main(void){
     //vector<string> data = {"Projeto1", "Descricao1", "10", "1"};
     //myCrud.createObj("PROJETO", data);
     //nome, num_serie, modelo, disponivel
-    vector<string> data1 = {"Equipamento1", "1", "Modelo1", "1", "2"};
-    myCrud.createObj("EQUIPAMENTO", data1); 
+    //vector<string> data1 = {"EquipamentoTeste2", "4", "ModeloNovo", "0", "2"};
+    //myCrud.createObj("EQUIPAMENTO", data1); 
     
+    vector<string> equipamentos = myCrud.getRelation("PROJETO", 1);
+    for(int i = 0; i < equipamentos.size(); i++) {
+        cout << equipamentos[i] << endl;
+    }
+
     sqlite3_close(db);
 
     cout << "Closed database successfully" << endl;
     
+    
+
+
     return 0;
 }
