@@ -101,7 +101,10 @@ void get_any_callback(Fl_Widget* widget, void*data){
   string id = args->id;
 
   vector<string> relations = crud->getRelation(classe, id);
-
+  if(relations.size() == 0) {
+    cout << "Nenhuma relação encontrada" << endl;
+    return;
+  }
   for(int i = 0; i < relations.size(); i++) {
     cout << relations[i] << endl;
   }
@@ -127,7 +130,7 @@ void search_callback(Fl_Widget* widget, void* data)
 
   vector<string> column_names = crud->getColumnNames(classe);  
   string search_term = search_box->value();
-
+  
   // Fazer algo com o termo de busca 
   // Se o o tamanho do termo de busca for maior que 0
   if(search_term.size() > 0){
@@ -160,13 +163,13 @@ void search_callback(Fl_Widget* widget, void* data)
       table->set_data(result, column_names, false);   
       table->col_width_all(100);
       table->col_width(1, 200);
+      if(classe==PROJETO){
+        table->col_width(2,300);
+      }
       
-
-      Pessoa *pessoa = new Pessoa(result[1], stoi(result[2]), result[3], result[4]);
-
       vector<string> method_names; 
 
-      if(classe=="FUNCIONARIO"){
+      if(classe==FUNCIONARIO){
         Funcionario *funcionario = new Funcionario(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]));
         method_names = funcionario->getMethods();
         
@@ -191,9 +194,9 @@ void search_callback(Fl_Widget* widget, void* data)
         
 
       }
-      else if(classe=="CLIENTE"){
+      else if(classe==CLIENTE){
         // "Reclamar", "Elogiar", "Esperar" 
-        Cliente *cliente = new Cliente(result[1], stoi(result[2]), result[3], result[4], result[5], result[6]);
+        Cliente *cliente = new Cliente(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]));
         method_names = cliente->getMethods();
         MyBtn *reclamarBtn = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
         wdw->add(reclamarBtn);
@@ -203,7 +206,7 @@ void search_callback(Fl_Widget* widget, void* data)
         wdw->add(esperarBtn);
         
       }
-      else if(classe=="PESQUISADOR"){
+      else if(classe==PESQUISADOR){
   
         Pesquisador *pesquisador = new Pesquisador(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]), result[8]);
         
@@ -216,11 +219,11 @@ void search_callback(Fl_Widget* widget, void* data)
         wdw->add(areaBtn);
         MyBtn *projetosBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
         // resul[0]-> id do pesquisador 
-        CallbackArgs *args = new CallbackArgs{static_cast<MyWindow*>(wdw), "PROJETO", false, false,result[0]};
+        CallbackArgs *args = new CallbackArgs{static_cast<MyWindow*>(wdw), PROJETO, false, false,result[0]};
         projetosBtn->callback(get_any_callback, args);
         wdw->add(projetosBtn);
         MyBtn *adicionarProjetoBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
-        adicionarProjetoBtn->callback(CreateCallBack, new CallbackArgs{static_cast<MyWindow*>(wdw), "PROJETO", true, true,result[0]});
+        adicionarProjetoBtn->callback(CreateCallBack, new CallbackArgs{static_cast<MyWindow*>(wdw), PROJETO, true, true,result[0]});
         wdw->add(adicionarProjetoBtn);
         MyBtn *removerProjetoBtn = new MyBtn(430, 270, 120, 30, method_names[3].c_str());
         removerProjetoBtn->callback(remove_any_callback, NULL);
@@ -229,7 +232,7 @@ void search_callback(Fl_Widget* widget, void* data)
 
       }
 
-      else if(classe=="TECNICO"){
+      else if(classe==TECNICO){
         Tecnico *tecnico = new Tecnico(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]), result[8]);
         method_names = tecnico->getMethods();
         //"Area", "Equipamentos", "AddEquipamento", "RemoveEquipamento"
@@ -237,11 +240,11 @@ void search_callback(Fl_Widget* widget, void* data)
         string *area = new string("Área: " + tecnico->getArea());
         areaBtn->callback(out_callback, area);
         MyBtn *equipamentosBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
-        CallbackArgs *args = new CallbackArgs{static_cast<MyWindow*>(wdw), "EQUIPAMENTO", false, false, result[0]};
+        CallbackArgs *args = new CallbackArgs{static_cast<MyWindow*>(wdw), EQUIPAMENTO, false, false, result[0]};
         equipamentosBtn->callback(get_any_callback, args);
         wdw->add(equipamentosBtn);
         MyBtn *addEquipamentoBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
-        addEquipamentoBtn->callback(CreateCallBack, new CallbackArgs{static_cast<MyWindow*>(wdw), "EQUIPAMENTO", true, true,result[0]});
+        addEquipamentoBtn->callback(CreateCallBack, new CallbackArgs{static_cast<MyWindow*>(wdw), EQUIPAMENTO, true, true,result[0]});
         wdw->add(addEquipamentoBtn);
 
         MyBtn *removeEquipamentoBtn = new MyBtn(430, 270, 120, 30, method_names[3].c_str());
@@ -421,7 +424,7 @@ void CreateCallBack(Fl_Widget*w, void *data){
 
   create_window->begin();
 
-  if(classe != "PROJETO" && classe != "EQUIPAMENTO"){
+  if(classe != PROJETO && classe != EQUIPAMENTO){
     Fl_Input *nomeInput = new Fl_Input(150, 10, 300, 30);
     InputStyle(nomeInput, "Nome: ");
     createArgs->inputs.push_back(nomeInput);
@@ -437,7 +440,7 @@ void CreateCallBack(Fl_Widget*w, void *data){
 
 
     
-    if(classe != "CLIENTE"){
+    if(classe != CLIENTE){
       Fl_Input *codigoInput = new Fl_Input(150, 170, 300, 30);
       InputStyle(codigoInput, "Código: ");
       createArgs->inputs.push_back(codigoInput);
@@ -448,7 +451,7 @@ void CreateCallBack(Fl_Widget*w, void *data){
       InputStyle(salarioInput, "Salário: ");
       createArgs->inputs.push_back(salarioInput);
       
-      if(classe == "PESQUISADOR" || classe == "TECNICO"){
+      if(classe == PESQUISADOR || classe == TECNICO){
         Fl_Input *areaInput = new Fl_Input(150, 290, 300, 30);
         InputStyle(areaInput, "Área: ");
         createArgs->inputs.push_back(areaInput);
@@ -462,10 +465,13 @@ void CreateCallBack(Fl_Widget*w, void *data){
       Fl_Input *dataInput = new Fl_Input(150, 210, 300, 30);
       InputStyle(dataInput, "Data: ");
       createArgs->inputs.push_back(dataInput);
+      Fl_Input *aPagarInput = new Fl_Input(150, 250, 300, 30);
+      InputStyle(aPagarInput, "A pagar: ");
+      createArgs->inputs.push_back(aPagarInput);
     }
   }
   else {
-    if(classe=="PROJETO"){
+    if(classe==PROJETO){
       Fl_Input *nomeInput = new Fl_Input(150, 10, 300, 30);
       InputStyle(nomeInput, "Titulo: ");
       createArgs->inputs.push_back(nomeInput);
@@ -566,7 +572,7 @@ void FuncionariosCallBack(Fl_Widget *w, void *data) {
   addImage("../src/funcionario.png");
   
 
-  crudBtns(new_window, "FUNCIONARIO"); 
+  crudBtns(new_window, FUNCIONARIO); 
 
   new_window->end();
   new_window->show(); 
@@ -583,7 +589,7 @@ void PesquisadoresCallBack(Fl_Widget *w, void *data) {
 
   
   addImage("../src/pesquisador.png");
-  crudBtns(readOne_window, "PESQUISADOR");
+  crudBtns(readOne_window, PESQUISADOR);
 
 
   readOne_window->end();
@@ -600,7 +606,7 @@ void TecnicosCallBack(Fl_Widget *w, void *data) {
 
   addImage("../src/tecnicos.png");
 
-  crudBtns(tecnicos_window, "TECNICO");
+  crudBtns(tecnicos_window, TECNICO);
 
   tecnicos_window->end();
   tecnicos_window->show();
@@ -616,7 +622,7 @@ void ClienteCallBack(Fl_Widget *w, void *data){
 
   addImage("../src/clientes.png");
 
-  crudBtns(clientes_window, "CLIENTE");
+  crudBtns(clientes_window, CLIENTE);
 
   clientes_window->end();
   clientes_window->show();
@@ -632,7 +638,7 @@ void EquipamentoCallBack(Fl_Widget *w, void *data){
 
   addImage("../src/equipamentos.png");
 
-  crudBtns(equipamento_window, "EQUIPAMENTO");
+  crudBtns(equipamento_window, EQUIPAMENTO);
 
   equipamento_window->end();
   equipamento_window->show();
@@ -648,26 +654,43 @@ void ProjetoCallBack(Fl_Widget *w, void *data){
 
 
   addImage("../src/projetos.png");
-  crudBtns(projeto_window, "PROJETO");
+  crudBtns(projeto_window, PROJETO);
 
   projeto_window->end();
   projeto_window->show();
 }
 
+
 void RelatorioCallBack(Fl_Widget *w, void *data){ 
+  // criar um arquivo para colocar o relatório nele
+  ofstream relatorio(RELATORIO_TXT);  
+  float despesas = 0;
+
+  if(!relatorio.is_open()){
+    cout << "Não foi possível abrir o arquivo" << endl;
+    return;
+  }
+
+  relatorio << "Relatório do Laboratório" << endl;
+  relatorio << "------------------------" << endl;
+
   // cria um objeto template para cada classe
-  Relatorio<Funcionario> relatorioFuncionario = Relatorio<Funcionario>();
-  Relatorio<Pesquisador> relatorioPesquisador = Relatorio<Pesquisador>();
-  Relatorio<Tecnico> relatorioTecnico = Relatorio<Tecnico>();
-  
+
+  Relatorio<Funcionario> templateFuncionario = Relatorio<Funcionario>();
+  Relatorio<Pesquisador> templatePesquisador = Relatorio<Pesquisador>();
+  Relatorio<Tecnico> templateTecnico = Relatorio<Tecnico>();
+  Relatorio<Cliente> templateCliente = Relatorio<Cliente>();
 
   vector<Funcionario> funcionarios;
+  vector<Pesquisador> pesquisadores;
+  vector<Tecnico> tecnicos;
+  vector<Cliente> clientes;
+  vector<Equipamento> equipamentos;
+  vector<Projeto> projetos;
 
-  // eu quero pegar todos os funcionarios pelo crud.readall e ir criando um um objeto para cada um deles e adicionando no vetor
-  // lembrar que a função readall ela também retorna o id, eu não quero adicionar o id
-  // string nome, int idade, string cpf, string telefone, string codigo, string cargo, float salario
   vector<string> result;
-  result = crud->readAll("FUNCIONARIO");
+  
+  result = crud->readAll(FUNCIONARIO);
 
   // ele começa no 1, vai até o 8, daí ele começa no 9 e assim por diante
   for(int i = 1; i < result.size(); i+=8){
@@ -675,11 +698,87 @@ void RelatorioCallBack(Fl_Widget *w, void *data){
     funcionarios.push_back(funcionario);
   }
 
-  cout << "Funcionarios: " << endl;
-  for(int i = 0; i < funcionarios.size(); i++){
-    cout << funcionarios[i].getNome() << endl;
+  templateFuncionario.toFile(funcionarios, relatorio, FUNCIONARIO, &despesas);
+
+  result = crud->readAll(PESQUISADOR);  
+
+  for(int i = 1; i < result.size(); i+=9){
+      Pesquisador pesquisador = Pesquisador(result[i], stoi(result[i+1]), result[i+2], result[i+3], result[i+4], result[i+5], stof(result[i+6]), result[i+7]);
+      pesquisadores.push_back(pesquisador);
+  }
+  
+  templatePesquisador.toFile(pesquisadores, relatorio, PESQUISADOR, &despesas); 
+  
+
+  result = crud->readAll(TECNICO);  
+
+  for(int i = 1; i < result.size(); i+=9){
+    Tecnico tecnico = Tecnico(result[i], stoi(result[i+1]), result[i+2], result[i+3], result[i+4], result[i+5], stof(result[i+6]), result[i+7]);
+    tecnicos.push_back(tecnico);
   }
 
+  templateTecnico.toFile(tecnicos, relatorio, TECNICO, &despesas);
+
+  result = crud->readAll(CLIENTE);
+  
+  for(int i = 1; i < result.size(); i+=7){
+    Cliente cliente = Cliente(result[i], stoi(result[i+1]), result[i+2], result[i+3], result[i+4], result[i+5], stof(result[i+6]));
+    clientes.push_back(cliente);
+  }
+  
+  relatorio << CLIENTE << endl;
+  relatorio << "------------------------" << endl;
+  relatorio << "Total: " << clientes.size() << endl;
+  int clienteFeliz=0;
+  float totalGanho = 0;
+  for(int i = 0; i < clientes.size(); i++){
+    if(clientes[i].getSatisfacao()){
+      clienteFeliz++;
+    }
+    totalGanho += clientes[i].getDevendo();
+  }
+  relatorio << "Clientes satisfeitos: " << clienteFeliz << endl;
+  relatorio << "Clientes insatisfeitos: " << clientes.size() - clienteFeliz << endl;
+  relatorio << "Total ganho: R$ " << totalGanho << endl;
+  relatorio << "------------------------" << endl;
+
+  result = crud->readAll(PROJETO);
+  relatorio << PROJETO << endl;
+  relatorio << "------------------------" << endl;
+
+  for(int i = 1; i < result.size(); i+=4){
+    Projeto projeto = Projeto(result[i], result[i+1], stoi(result[i+2]));
+    projetos.push_back(projeto);
+  }
+
+  relatorio << "Total: " << projetos.size() << endl;
+  relatorio << "------------------------" << endl;
+
+  result = crud->readAll(EQUIPAMENTO);
+
+  for(int i = 1; i < result.size(); i+=5){
+    Equipamento equipamento = Equipamento(result[i], stoi(result[i+1]), result[i+2], stoi(result[i+3]));
+    equipamentos.push_back(equipamento);
+  }
+
+  relatorio << EQUIPAMENTO << endl;
+  relatorio << "------------------------" << endl;
+  relatorio << "Total: " << equipamentos.size() << endl;
+  int disponiveis = 0;
+  for(int i = 0; i < equipamentos.size(); i++){
+    if(equipamentos[i].getDisponivel()){
+      disponiveis++;
+    }
+  }
+  relatorio << "Equipamentos disponíveis: " << disponiveis << endl;
+  relatorio << "------------------------" << endl;
+
+  relatorio << "Despesas totais: R$ " << despesas << endl;
+  relatorio << "Lucro do laboratório: R$ " << totalGanho - despesas << endl;
+
+  relatorio.close();
+
+  cout << "Relatório gerado com sucesso!" << endl;
 }
 
 
@@ -704,12 +803,12 @@ int main(int argc, char **argv) {
   MyBtn *createButton = new MyBtn(470, 300, 120, 30, "Clientes");
   createButton->callback(ClienteCallBack, NULL);
 
-  MyBtn *equipamentosBtn = new MyBtn(160, 360, 120, 30, "Equipamentos");
+  MyBtn *equipamentosBtn = new MyBtn(90, 350, 120, 30, "Equipamentos");
   equipamentosBtn->callback(EquipamentoCallBack, NULL);
-  MyBtn *projetosBtn = new MyBtn(310, 360, 120, 30, "Projetos");
+  MyBtn *projetosBtn = new MyBtn(240, 350, 120, 30, "Projetos");
   projetosBtn->callback(ProjetoCallBack, NULL);
  
-  MyBtn *relatorioBtn = new MyBtn(470, 360, 120, 30, "Relatório"); 
+  MyBtn *relatorioBtn = new MyBtn(390, 350, 120, 30, "Relatório"); 
   relatorioBtn->callback(RelatorioCallBack, NULL); 
 
   window->end();

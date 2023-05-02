@@ -5,6 +5,9 @@ Funcionario::Funcionario() : Funcionario("", 0, "", "", "", "", 0.0){}
 Funcionario::Funcionario(string nome, int idade, string cpf, string telefone, string codigo, string cargo, float salario)
 : Pessoa(nome, idade, cpf, telefone){
     this->funcionarioTrabalhando = false;
+    setCodigo(codigo);
+    setCargo(cargo);
+    setSalario(salario);
 }
 
 string Funcionario::getCodigo(){

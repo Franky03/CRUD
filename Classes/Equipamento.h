@@ -7,7 +7,7 @@ using namespace std;
 class Equipamento {
     public:
         Equipamento();
-        Equipamento(string nome, int num_serie, string modelo, bool disponivel);
+        Equipamento(string nome, int num_serie, string modelo, bool disponivel=true);
         
         string getNome();
         void setNome(string nome);

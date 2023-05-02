@@ -22,6 +22,7 @@ class Funcionario : public Pessoa {
         void trabalhar();
         void descansar();
         string isTrabalhando();
+        
 
             
     private:

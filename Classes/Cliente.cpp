@@ -1,11 +1,12 @@
 #include "Cliente.h"
 
-Cliente::Cliente() : Cliente("", 0, "", "", "", ""){}
+Cliente::Cliente() : Cliente("", 0, "", "", "", "", 0.0){}
 
-Cliente::Cliente(string nome, int idade, string cpf, string telefone, string encomenda, string data)
+Cliente::Cliente(string nome, int idade, string cpf, string telefone, string encomenda, string data, float devendo)
 : Pessoa(nome, idade, cpf, telefone){
     setEncomenda(encomenda);
     setData(data);
+    setDevendo(devendo);
 }
 
 string Cliente::getEncomenda(){
@@ -24,7 +25,27 @@ void Cliente::setData(string data){
     this->data = data;
 }
 
+void Cliente::setDevendo(float devendo){
+    this->devendo = devendo;
+}
+
+float Cliente::getDevendo(){
+    return devendo;
+}
+
 vector<string> Cliente::getMethods()
 {
     return {"Reclamar", "Elogiar", "Esperar"};
+}
+
+bool Cliente::getSatisfacao(){
+    return clienteFeliz;
+}
+
+void Cliente::reclamar(){
+    clienteFeliz = false;
+}
+
+void Cliente::elogiar(){
+    clienteFeliz = true;
 }

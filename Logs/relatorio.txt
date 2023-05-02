@@ -1,0 +1,38 @@
+Relatório do Laboratório
+------------------------
+FUNCIONARIO
+------------------------
+Total: 1
+Total Gasto por Ano: R$ 18527.8
+Total Gasto por Mês: R$ 1543.98
+------------------------
+PESQUISADOR
+------------------------
+Total: 1
+Total Gasto por Ano: R$ 29435.4
+Total Gasto por Mês: R$ 2452.95
+------------------------
+TECNICO
+------------------------
+Total: 1
+Total Gasto por Ano: R$ 24507.8
+Total Gasto por Mês: R$ 2042.32
+------------------------
+CLIENTE
+------------------------
+Total: 1
+Clientes satisfeitos: 1
+Clientes insatisfeitos: 0
+Total ganho: R$ 56780.9
+------------------------
+PROJETO
+------------------------
+Total: 1
+------------------------
+EQUIPAMENTO
+------------------------
+Total: 0
+Equipamentos disponíveis: 0
+------------------------
+Despesas totais: R$ 6039.25
+Lucro do laboratório: R$ 50741.6

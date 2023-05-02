@@ -29,4 +29,21 @@ class Relatorio {
                 vec[i].aumentarSalario(percentual);
             }
         };
+
+        void toFile(vector<T> objetos, ofstream &arquivo, string classe, float *totalSalario){
+            arquivo << classe << endl;
+            arquivo << "------------------------" << endl;
+            arquivo << "Total: " << objetos.size() << endl;
+            float salarioTotal = 0;
+            for(int i = 0; i < objetos.size(); i++){
+                salarioTotal += objetos[i].getSalario();
+                
+            }
+            arquivo << "Total Gasto por Ano: R$ " << salarioTotal*12 << endl;
+            arquivo << "Total Gasto por Mês: R$ " << salarioTotal << endl;
+
+            *totalSalario += salarioTotal;
+
+            arquivo << "------------------------" << endl;
+        }
 };

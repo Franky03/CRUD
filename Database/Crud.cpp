@@ -123,7 +123,8 @@ void CRUD::CreateDB(){
                                 "cpf TEXT NOT NULL,"
                                 "telefone TEXT NOT NULL,"
                                 "encomenda TEXT NOT NULL,"
-                                "data TEXT NOT NULL);";
+                                "data TEXT NOT NULL,"
+                                "devendo REAL NOT NULL);";
 
     Execute(cliente_table, db, err_msg, result);
 
@@ -160,8 +161,8 @@ void CRUD::createObj(string classe, vector<string> atributos){
             values += ", '" + atributos[4] + "', '" + atributos[5] + "', " + atributos[6] + ", '" + atributos[7] + "')";
         }
         else if(classe == "CLIENTE"){
-            sql += ", encomenda, data)";
-            values += ", '" + atributos[4] + "', '" + atributos[5] + "')";
+            sql += ", encomenda, data, devendo)";
+            values +=  ", '" + atributos[4] + "', '" + atributos[5] + "', " + atributos[6] + ")";
         }
     }
     else if(classe == "PROJETO"){
@@ -381,7 +382,7 @@ vector<string> CRUD::getRelation(string classe, string id){
                     "(SELECT id_pesquisador FROM PROJETO_PESQUISADOR WHERE id_projeto = " + id + ");";
 
     } else if(classe == "EQUIPAMENTO"){
-        cout << "entrou EQUIPAMENTO" << endl;
+        
         relation =  "SELECT DISTINCT nome, num_serie, modelo, disponivel FROM EQUIPAMENTO "
                     "JOIN TECNICO_EQUIPAMENTO "
                     "ON EQUIPAMENTO.id = TECNICO_EQUIPAMENTO.id_equipamento "

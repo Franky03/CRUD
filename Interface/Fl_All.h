@@ -9,7 +9,13 @@
 #include <FL/Fl_Text_Display.H>
 #include <FL/Fl_Table.H>
 
-
+#define RELATORIO_TXT "../Logs/relatorio.txt"
+#define FUNCIONARIO "FUNCIONARIO"
+#define CLIENTE "CLIENTE"
+#define PESQUISADOR "PESQUISADOR"
+#define TECNICO "TECNICO"
+#define PROJETO "PROJETO"
+#define EQUIPAMENTO "EQUIPAMENTO"
 
 #include "MyBtn.h"
 #include "MyWindow.h"
@@ -21,6 +27,7 @@
 #include <sstream>
 #include <typeinfo>
 #include <iomanip>
+#include <fstream>
 
 #include "../Database/Crud.h"  
 #include "../Classes/allClass.h"
