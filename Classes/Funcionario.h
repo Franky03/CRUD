@@ -15,6 +15,7 @@ class Funcionario : public Pessoa {
         void setCargo(string cargo);
         float getSalario();
         void setSalario(float salario);
+        
         double calcularSalarioAnual();
         void aumentarSalario();
         void aumentarSalario(float percentual);
@@ -22,15 +23,12 @@ class Funcionario : public Pessoa {
         void trabalhar();
         void descansar();
         string isTrabalhando();
-        
-
             
     private:
         string codigo;
         string cargo;
         float salario;
         bool funcionarioTrabalhando;
-
 };
 
 #endif

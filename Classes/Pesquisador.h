@@ -10,11 +10,12 @@ class Pesquisador : public Funcionario {
 
         string getArea();
         void setArea(string area);
+        vector<Projeto> getProjetos();
+        
+        vector<string> getMethods();
         void addProjeto(Projeto projeto);
         void removeProjeto(string titulo);
-        vector<Projeto> getProjetos();
-        vector<string> getMethods();
-
+        
     private:
         string area;
         vector<Projeto> projetos;

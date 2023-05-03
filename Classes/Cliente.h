@@ -14,6 +14,7 @@ class Cliente : public Pessoa {
         void setData(string data);
         void setDevendo(float devendo);
         float getDevendo();
+        
         void reclamar();
         void elogiar();
         vector<string> getMethods();
@@ -23,5 +24,4 @@ class Cliente : public Pessoa {
         string data;
         bool clienteFeliz;
         float devendo;
-        
 };

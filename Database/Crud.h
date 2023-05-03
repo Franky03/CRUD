@@ -7,6 +7,7 @@ using namespace std;
 class CRUD {
     public:
         CRUD(sqlite3 *db);
+        
         void CreateDB();
         void createObj(string classe, vector<string> atributos);
         vector<string> readObj(string classe, string nome);
@@ -15,7 +16,6 @@ class CRUD {
         void deleteObj(string classe, string id);
         vector<string> getColumnNames(string classe);   
         vector<string> getRelation(string classe, string id);
-
     
     private:
         sqlite3 *db;
