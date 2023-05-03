@@ -33,8 +33,7 @@ float Cliente::getDevendo(){
     return devendo;
 }
 
-vector<string> Cliente::getMethods()
-{
+vector<string> Cliente::getMethods(){
     return {"Reclamar", "Elogiar", "Esperar"};
 }
 

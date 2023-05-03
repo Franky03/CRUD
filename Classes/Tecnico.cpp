@@ -32,7 +32,6 @@ void Tecnico::removeEquipamento(int num_serie){
     }
 }
 
-vector<string> Tecnico::getMethods()
-{
+vector<string> Tecnico::getMethods(){
     return {"Area", "Equipamentos", "AddEquipamento", "RemoveEquip."};
 }

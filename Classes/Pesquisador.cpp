@@ -32,7 +32,6 @@ vector<Projeto> Pesquisador::getProjetos(){
     return projetos;
 }
 
-vector<string> Pesquisador::getMethods()
-{
+vector<string> Pesquisador::getMethods(){
     return {"Area","Projetos", "AddProjeto", "RemoveProjeto"};
 }

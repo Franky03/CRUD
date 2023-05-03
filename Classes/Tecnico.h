@@ -12,6 +12,7 @@ class Tecnico : public Funcionario {
         string getArea();
         void setArea(string area);
         vector<Equipamento> getEquipamentos();
+        
         void addEquipamento(Equipamento equipamento);
         void removeEquipamento(int num_serie);
         vector<string> getMethods();
