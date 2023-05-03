@@ -18,6 +18,7 @@ class Pessoa {
         void setCpf(string cpf);
         string getTelefone();
         void setTelefone(string telefone);
+        virtual vector<string> getMethods() =0;
 
     private:
         string nome;

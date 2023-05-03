@@ -32,12 +32,6 @@ struct CreateArgs {
   string id;
 };
 
-struct PersonArgs {
-  MyWindow* wdw;
-  string classe;
-  Pessoa *pessoa;
-};
-
 struct DeleteArgs {
   Fl_Window* wdw;
   string classe;
@@ -46,19 +40,29 @@ struct DeleteArgs {
 
 void CreateCallBack(Fl_Widget *w, void *data);
 
+// utils
+
 void addImage(const char* file){
   MyBox *imageBox = new MyBox(180, 70, 250, 250);
   Fl_PNG_Image *image = new Fl_PNG_Image(file);
   imageBox->image(image);
 }
 
-// Funções de callback
-
 void backCallBack(Fl_Widget *w, void *data) {
   last_window->show();
   Fl_Window *new_window = static_cast<Fl_Window*>(data);
   new_window->hide();
 }
+
+void backButton(void *data){
+  MyWindow *new_window = static_cast<MyWindow*>(data);
+
+  MyBtn *backBtn = new MyBtn(10, 360, 120, 30, "Back");
+  backBtn->callback(backCallBack, new_window);
+}
+// Funções de callback
+
+
 
 void backStartCallBack(Fl_Widget *w, void *data) {
   window->show();
@@ -75,13 +79,6 @@ void delete_callback(Fl_Widget* widget, void* data) {
   crud->deleteObj(classe, id);
   wdw->hide();
   window->show();
-}
-
-void backButton(void *data){
-  MyWindow *new_window = static_cast<MyWindow*>(data);
-
-  MyBtn *backBtn = new MyBtn(10, 360, 120, 30, "Back");
-  backBtn->callback(backCallBack, new_window);
 }
 
 // verificar quall classe é e transformar no objeto da classe, depois fazer o cout
@@ -289,7 +286,7 @@ void search_callback(Fl_Widget* widget, void* data)
 
 void create_callback(Fl_Widget* widget, void* data)
 {
-  cout << "Create callback" << endl;
+
   CreateArgs* args = static_cast<CreateArgs*>(data);
   MyWindow* wdw = args->wdw;
   string classe = args->classe;  
@@ -300,10 +297,16 @@ void create_callback(Fl_Widget* widget, void* data)
   for(int i=0; i<inputs.size(); i++)
   {
     string val = inputs[i]->value();
-    values.push_back(val);
+    if(val!=""){
+      values.push_back(val);
+    }
   }
 
-  crud->createObj(classe, values);
+  if(values.size() > 2)
+    crud->createObj(classe, values);
+  else 
+    cout << "Poucos ou nenhum valor foram fornecido!" << endl;
+
 }
 
 void cancel_callback(Fl_Widget* widget, void* data)
