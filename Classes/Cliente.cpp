@@ -43,9 +43,11 @@ bool Cliente::getSatisfacao(){
 }
 
 void Cliente::reclamar(){
+    cout << "Cliente reclamando..." << endl;
     clienteFeliz = false;
 }
 
 void Cliente::elogiar(){
+    cout << "Cliente elogiando..." << endl;
     clienteFeliz = true;
 }

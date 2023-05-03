@@ -18,6 +18,13 @@ struct CallbackArgs {
   bool create;
   bool from_ro;
   string id;
+  int operation;
+};
+
+struct SetArgs {
+  Cliente* c;
+  string classe;
+  string id;
 };
 struct InputArgs {
   MyWindow* wdw;
@@ -89,7 +96,28 @@ void out_callback(Fl_Widget* widget, void*data){
 }
 
 void set_callback(Fl_Widget* widget, void*data){
+  CallbackArgs* args = static_cast<CallbackArgs*>(data);
+  string classe = args->classe;
+  string id = args->id;
 
+  if(classe==CLIENTE){
+    
+    
+  }
+}
+
+void reclama_callback(Fl_Widget* widget, void*data){
+  Cliente* c = static_cast<Cliente*>(data);
+  c->reclamar();
+}
+
+void elogia_callback(Fl_Widget* widget, void*data){
+  Cliente* c = static_cast<Cliente*>(data);
+  c->elogiar();
+}
+
+void espera_callback(Fl_Widget* widget, void*data){
+  Cliente* c = static_cast<Cliente*>(data);
 }
 
 void get_any_callback(Fl_Widget* widget, void*data){
@@ -111,9 +139,19 @@ void get_any_callback(Fl_Widget* widget, void*data){
     }
     
     for(int i=0; i<projetos.size(); i++){
-      text += projetos[i].getNome() + " | " + projetos[i].getDescricao() + " | " + to_string(projetos[i].getDuracao()) + "\n";
+      text += projetos[i].getNome() + " | " + projetos[i].getDescricao() + " | " + to_string(projetos[i].getDuracao()) + " anos de duração.\n";
     }
     
+  } else if(classe==EQUIPAMENTO){
+    vector<Equipamento> equipamentos;
+    for(int i=0; i<relations.size(); i+=4){
+      Equipamento e = Equipamento(relations[i], stoi(relations[i+1]), relations[i+2], relations[i+3]=="1"?true:false);
+      equipamentos.push_back(e);
+    }
+
+    for(int i=0; i<equipamentos.size(); i++){
+      text += equipamentos[i].getNome() + " | " + to_string(equipamentos[i].getNumSerie()) + " | " + equipamentos[i].getModelo() + " | " + (equipamentos[i].getDisponivel()?"Disponível":"Indisponível") + "\n";
+    }
   }
   cout << text;
   
@@ -201,18 +239,26 @@ void search_callback(Fl_Widget* widget, void* data)
         
         wdw->add(aumentarSalario);
         
-
+      
       }
       else if(classe==CLIENTE){
         // "Reclamar", "Elogiar", "Esperar" 
         Cliente *cliente = new Cliente(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]));
         method_names = cliente->getMethods();
         MyBtn *reclamarBtn = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
+  
+        reclamarBtn->callback(reclama_callback, cliente);
         wdw->add(reclamarBtn);
         MyBtn *elogiarBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
+        elogiarBtn->callback(elogia_callback, cliente);
         wdw->add(elogiarBtn);
         MyBtn *esperarBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
+        esperarBtn->callback(espera_callback, cliente);
         wdw->add(esperarBtn);
+        MyBtn *isFeliz =  new MyBtn(430, 270, 120, 30, "Cliente Feliz ?");
+        wdw->add(isFeliz);
+
+
         
       }
       else if(classe==PESQUISADOR){
@@ -302,8 +348,11 @@ void create_callback(Fl_Widget* widget, void* data)
     }
   }
 
-  if(values.size() > 2)
+  if(values.size() > 2){
     crud->createObj(classe, values);
+    wdw->hide();
+    window->show();
+  }
   else 
     cout << "Poucos ou nenhum valor foram fornecido!" << endl;
 
@@ -374,7 +423,8 @@ void ReadAllCallBack(Fl_Widget*w, void *data){
   MyTable *table = new MyTable(20, 60, 560, 300, 11, 7);
   table->set_data(result, column_names);
   table->col_width_all(100);
-  table->col_width(1, 200); 
+  table->col_width(1, 200);
+  if(classe==PROJETO) table->col_width(2, 300);
    
   readAll_window->add(table); 
   readAll_window->redraw();
