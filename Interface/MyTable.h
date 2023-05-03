@@ -36,7 +36,11 @@ class MyTable : public Fl_Table {
             this->data = data;
             this->column_names = column_names;
             int num_cols = column_names.size();
+            int num_lines = data.size()/ num_cols + 1;
+            cout << "Num cols: " << num_cols << endl;
             cols(num_cols); 
+            // colocar linhas automaticamente
+            rows(num_lines);
             
             if(readAll){
                 size(w(), 270);
