@@ -105,9 +105,21 @@ void get_any_callback(Fl_Widget* widget, void*data){
     cout << "Nenhuma relação encontrada" << endl;
     return;
   }
-  for(int i = 0; i < relations.size(); i++) {
-    cout << relations[i] << endl;
+  string text = "";
+  if(classe==PROJETO){
+    vector<Projeto> projetos;
+    for(int i=0; i<relations.size(); i+=3){
+      Projeto p = Projeto(relations[i], relations[i+1], stoi(relations[i+2]));
+      projetos.push_back(p);
+    }
+    
+    for(int i=0; i<projetos.size(); i++){
+      text += projetos[i].getNome() + " | " + projetos[i].getDescricao() + " | " + to_string(projetos[i].getDuracao()) + "\n";
+    }
+    
   }
+  cout << text;
+  
 }
 
 void remove_any_callback(Fl_Widget* widget, void*data){
@@ -211,21 +223,23 @@ void search_callback(Fl_Widget* widget, void* data)
         Pesquisador *pesquisador = new Pesquisador(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]), result[8]);
         
         method_names = pesquisador->getMethods();
-        MyBtn *areaBtn = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
+        MyBtn *areaBtn = new MyBtn(40, 270, 120, 30, "Área");
 
         string *area = new string("Área: " + pesquisador->getArea());
         
         areaBtn->callback(out_callback, area);
         wdw->add(areaBtn);
-        MyBtn *projetosBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
+        MyBtn *projetosBtn = new MyBtn(170, 270, 120, 30, "Projetos");
         // resul[0]-> id do pesquisador 
-        CallbackArgs *args = new CallbackArgs{static_cast<MyWindow*>(wdw), PROJETO, false, false,result[0]};
+        CallbackArgs *args = new CallbackArgs();
+        args->classe = PROJETO;
+        args->id = result[0];
         projetosBtn->callback(get_any_callback, args);
         wdw->add(projetosBtn);
-        MyBtn *adicionarProjetoBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
+        MyBtn *adicionarProjetoBtn = new MyBtn(300, 270, 120, 30, "AddProjeto");
         adicionarProjetoBtn->callback(CreateCallBack, new CallbackArgs{static_cast<MyWindow*>(wdw), PROJETO, true, true,result[0]});
         wdw->add(adicionarProjetoBtn);
-        MyBtn *removerProjetoBtn = new MyBtn(430, 270, 120, 30, method_names[3].c_str());
+        MyBtn *removerProjetoBtn = new MyBtn(430, 270, 120, 30, "RemoveProjeto");
         removerProjetoBtn->callback(remove_any_callback, NULL);
         wdw->add(removerProjetoBtn);
         
@@ -236,18 +250,18 @@ void search_callback(Fl_Widget* widget, void* data)
         Tecnico *tecnico = new Tecnico(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]), result[8]);
         method_names = tecnico->getMethods();
         //"Area", "Equipamentos", "AddEquipamento", "RemoveEquipamento"
-        MyBtn *areaBtn = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
+        MyBtn *areaBtn = new MyBtn(40, 270, 120, 30, "Área");
         string *area = new string("Área: " + tecnico->getArea());
         areaBtn->callback(out_callback, area);
-        MyBtn *equipamentosBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
+        MyBtn *equipamentosBtn = new MyBtn(170, 270, 120, 30, "Equipamentos");
         CallbackArgs *args = new CallbackArgs{static_cast<MyWindow*>(wdw), EQUIPAMENTO, false, false, result[0]};
         equipamentosBtn->callback(get_any_callback, args);
         wdw->add(equipamentosBtn);
-        MyBtn *addEquipamentoBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
+        MyBtn *addEquipamentoBtn = new MyBtn(300, 270, 120, 30, "AddEquipamento");
         addEquipamentoBtn->callback(CreateCallBack, new CallbackArgs{static_cast<MyWindow*>(wdw), EQUIPAMENTO, true, true,result[0]});
         wdw->add(addEquipamentoBtn);
 
-        MyBtn *removeEquipamentoBtn = new MyBtn(430, 270, 120, 30, method_names[3].c_str());
+        MyBtn *removeEquipamentoBtn = new MyBtn(430, 270, 120, 30, "RemoveEquip.");
         removeEquipamentoBtn->callback(remove_any_callback, NULL);
         wdw->add(removeEquipamentoBtn);
         
