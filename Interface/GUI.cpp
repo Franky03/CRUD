@@ -116,6 +116,17 @@ void elogia_callback(Fl_Widget* widget, void*data){
   c->elogiar();
 }
 
+void isFeliz_callback(Fl_Widget* widget, void*data){
+  Cliente* c = static_cast<Cliente*>(data);
+  int feliz = c->getSatisfacao();
+  cout << c->getNome();
+  if(feliz){
+    cout << " feliz" << endl;
+  } else {
+    cout << " não está feliz" << endl;
+  }
+}
+
 void espera_callback(Fl_Widget* widget, void*data){
   Cliente* c = static_cast<Cliente*>(data);
 }
@@ -256,8 +267,9 @@ void search_callback(Fl_Widget* widget, void* data)
         esperarBtn->callback(espera_callback, cliente);
         wdw->add(esperarBtn);
         MyBtn *isFeliz =  new MyBtn(430, 270, 120, 30, "Cliente Feliz ?");
+        isFeliz->callback(isFeliz_callback, cliente);
         wdw->add(isFeliz);
-
+ 
 
         
       }
@@ -425,7 +437,7 @@ void ReadAllCallBack(Fl_Widget*w, void *data){
   table->col_width_all(100);
   table->col_width(1, 200);
   if(classe==PROJETO) table->col_width(2, 300);
-   
+  else if(classe==FUNCIONARIO) table->col_width(6, 300);
   readAll_window->add(table); 
   readAll_window->redraw();
   
@@ -796,16 +808,12 @@ void RelatorioCallBack(Fl_Widget *w, void *data){
   relatorio << CLIENTE << endl;
   relatorio << "------------------------" << endl;
   relatorio << "Total: " << clientes.size() << endl;
-  int clienteFeliz=0;
+  
   float totalGanho = 0;
   for(int i = 0; i < clientes.size(); i++){
-    if(clientes[i].getSatisfacao()){
-      clienteFeliz++;
-    }
     totalGanho += clientes[i].getDevendo();
   }
-  relatorio << "Clientes satisfeitos: " << clienteFeliz << endl;
-  relatorio << "Clientes insatisfeitos: " << clientes.size() - clienteFeliz << endl;
+  
   relatorio << "Total ganho: R$ " << totalGanho << endl;
   relatorio << "------------------------" << endl;
 
