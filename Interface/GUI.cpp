@@ -190,10 +190,13 @@ void get_any_callback(Fl_Widget* widget, void*data){
 }
 
 void remove_any_callback(Fl_Widget* widget, void*data){
-  cout << "Nome para remover: ";
-  string nome;
-  getline(cin, nome);
-  cout << nome << " foi removido" << endl;
+  string* classe = reinterpret_cast<string*>(data);
+  string classe_value = *classe;
+  cout << "ID do projeto que deseja remover: ";
+  string id;
+  getline(cin, id);
+  crud->deleteObj(classe_value, id);
+  cout << id << " foi removido" << endl;
 }
 
 void search_callback(Fl_Widget* widget, void* data)
@@ -268,7 +271,7 @@ void search_callback(Fl_Widget* widget, void* data)
         isTrabalhando->callback(isTrabalhando_callback, funcionario);
         
         wdw->add(isTrabalhando);
-        MyBtn *aumentarSalario = new MyBtn(40, 310, 120, 30, method_names[4].c_str());
+        MyBtn *aumentarSalario = new MyBtn(230, 310, 130, 30, method_names[4].c_str());
         
         wdw->add(aumentarSalario);
         
@@ -317,7 +320,8 @@ void search_callback(Fl_Widget* widget, void* data)
         adicionarProjetoBtn->callback(CreateCallBack, new CallbackArgs{static_cast<MyWindow*>(wdw), PROJETO, true, true,result[0]});
         wdw->add(adicionarProjetoBtn);
         MyBtn *removerProjetoBtn = new MyBtn(430, 270, 120, 30, "RemoveProjeto");
-        removerProjetoBtn->callback(remove_any_callback, NULL);
+        string *_classe = new string(PROJETO);
+        removerProjetoBtn->callback(remove_any_callback, _classe);
         wdw->add(removerProjetoBtn);
         
 
@@ -339,7 +343,8 @@ void search_callback(Fl_Widget* widget, void* data)
         wdw->add(addEquipamentoBtn);
 
         MyBtn *removeEquipamentoBtn = new MyBtn(430, 270, 120, 30, "RemoveEquip.");
-        removeEquipamentoBtn->callback(remove_any_callback, NULL);
+        string *_classe = new string(EQUIPAMENTO);
+        removeEquipamentoBtn->callback(remove_any_callback, _classe);
         wdw->add(removeEquipamentoBtn);
         
         wdw->add(areaBtn);
