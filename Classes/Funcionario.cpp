@@ -43,15 +43,17 @@ vector<string> Funcionario::getMethods(){
 }
 
 void Funcionario::trabalhar(){
+    cout << getNome() << " está trabalhando..." << endl;
     this->funcionarioTrabalhando = true;
 }
 
 void Funcionario::descansar(){
+    cout << getNome() << " está descansando..." << endl;
     this->funcionarioTrabalhando = false;
 }
 
-string Funcionario::isTrabalhando(){
-    return this->funcionarioTrabalhando ? "Sim" : "Não";
+int Funcionario::isTrabalhando(){
+    return this->funcionarioTrabalhando ? 1 : 0;
 }
 
 void Funcionario::aumentarSalario(){
