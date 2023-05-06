@@ -18,6 +18,16 @@ void Execute(const char *sql_ms, sqlite3 *db, char *err_msg, int rc) {
     }
 }
 
+int getIdFromNameCallback(void* data, int argc, char** argv, char** azColName){
+    if(argc != 1){
+        cerr << "Callback error: invalid number of columns" << endl;
+        return SQLITE_ERROR;
+    }
+    string* result = static_cast<string*>(data);
+    *result = argv[0];
+    return SQLITE_OK;
+}
+
 void CRUD::CreateDB(){
 
     int result = sqlite3_open("mydb.db", &db);
@@ -399,6 +409,32 @@ vector<string> CRUD::getRelation(string classe, string id){
         exit(1);
     }
     
+    sqlite3_close(db);
+
+    return result;
+}
+
+string CRUD::getIdFromName(string classe, string nome){
+    rc = sqlite3_open("mydb.db", &db);
+
+    if(rc != SQLITE_OK) {
+        cerr << "Can't open database: " << sqlite3_errmsg(db) << endl;
+        sqlite3_close(db);
+        return ""; // retorna uma string vazia em caso de erro
+    }
+
+    string result;
+    string sql = "SELECT id FROM " + classe + " WHERE nome = '" + nome + "';";
+   
+    rc = sqlite3_exec(db, sql.c_str(), getIdFromNameCallback, &result, &err_msg);
+
+    if(rc != SQLITE_OK ) {
+        cerr << "SQL error: " << err_msg << endl;
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+        return ""; // retorna uma string vazia em caso de erro
+    }
+
     sqlite3_close(db);
 
     return result;

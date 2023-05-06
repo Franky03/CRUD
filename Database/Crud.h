@@ -16,6 +16,7 @@ class CRUD {
         void deleteObj(string classe, string id);
         vector<string> getColumnNames(string classe);   
         vector<string> getRelation(string classe, string id);
+        string getIdFromName(string classe, string nome);
     
     private:
         sqlite3 *db;

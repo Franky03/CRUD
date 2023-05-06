@@ -18,7 +18,7 @@ struct CallbackArgs {
   bool create;
   bool from_ro;
   string id;
-  int operation;
+  string values[6];
 };
 
 struct SetArgs {
@@ -148,10 +148,6 @@ void isTrabalhando_callback(Fl_Widget* widget, void*data){
   }
 }
 
-void espera_callback(Fl_Widget* widget, void*data){
-  Cliente* c = static_cast<Cliente*>(data);
-}
-
 void get_any_callback(Fl_Widget* widget, void*data){
   CallbackArgs* args = static_cast<CallbackArgs*>(data);
   string classe = args->classe;
@@ -199,6 +195,12 @@ void remove_any_callback(Fl_Widget* widget, void*data){
 void aumentaS_callback(Fl_Widget* widget, void*data){
   Funcionario* f = static_cast<Funcionario*>(data);
   f->aumentarSalario();
+  string id = crud->getIdFromName(FUNCIONARIO, f->getNome());
+  vector<string> values;
+  values.push_back(to_string(f->getSalario()));
+  vector<string> atributos;
+  atributos.push_back("salario");
+  crud->updateObj(FUNCIONARIO, id, atributos, values);
 }
 
 void salario_anual_callback(Fl_Widget* widget, void*data){
@@ -278,7 +280,7 @@ void search_callback(Fl_Widget* widget, void* data)
         isTrabalhando->callback(isTrabalhando_callback, funcionario);
         
         wdw->add(isTrabalhando);
-        MyBtn *aumentarSalario = new MyBtn(40, 310, 120, 30, method_names[4].c_str());
+        MyBtn *aumentarSalario = new MyBtn(40, 310, 120, 30, "AumentaSalário");
         aumentarSalario->callback(aumentaS_callback, funcionario);
         wdw->add(aumentarSalario);
         
@@ -296,7 +298,12 @@ void search_callback(Fl_Widget* widget, void* data)
         elogiarBtn->callback(elogia_callback, cliente);
         wdw->add(elogiarBtn);
         MyBtn *esperarBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
-        esperarBtn->callback(espera_callback, cliente);
+
+        string values[6] = {result[1], result[2], result[3], result[4], result[5], result[7]};
+
+        CallbackArgs* args = new CallbackArgs{static_cast<MyWindow*>(wdw), classe, false, true, result[0], {result[1], result[2], result[3], result[4], result[5], result[7]}};
+        
+        esperarBtn->callback(CreateCallBack, args);
         wdw->add(esperarBtn);
         MyBtn *isFeliz =  new MyBtn(430, 270, 120, 30, "Cliente Feliz ?");
         isFeliz->callback(isFeliz_callback, cliente);
@@ -523,6 +530,7 @@ void CreateCallBack(Fl_Widget*w, void *data){
   bool create = args->create;
   string id = args->id;
   bool from_ro = args->from_ro;
+  string *values = args->values;
 
   CreateArgs *createArgs = new CreateArgs{};
   createArgs->wdw = create_window;
@@ -571,6 +579,7 @@ void CreateCallBack(Fl_Widget*w, void *data){
     }
     else{
       Fl_Input *encomendaInput = new Fl_Input(150, 170, 300, 30);
+
       InputStyle(encomendaInput, "Encomenda: ");
       createArgs->inputs.push_back(encomendaInput);
       Fl_Input *dataInput = new Fl_Input(150, 210, 300, 30);
@@ -578,6 +587,20 @@ void CreateCallBack(Fl_Widget*w, void *data){
       createArgs->inputs.push_back(dataInput);
       Fl_Input *aPagarInput = new Fl_Input(150, 250, 300, 30);
       InputStyle(aPagarInput, "A pagar: ");
+      if(from_ro){
+        nomeInput->value(values[0].c_str());
+        nomeInput->deactivate();
+        idadeInput->value(values[1].c_str());
+        idadeInput->deactivate();
+        cpfInput->value(values[2].c_str());
+        cpfInput->deactivate();
+        telefoneInput->value(values[3].c_str());
+        telefoneInput->deactivate();
+        encomendaInput->value(values[4].c_str());
+        encomendaInput->deactivate();
+        aPagarInput->value(values[5].c_str());
+        aPagarInput->deactivate();
+      }
       createArgs->inputs.push_back(aPagarInput);
     }
   }
@@ -700,7 +723,7 @@ void PesquisadoresCallBack(Fl_Widget *w, void *data) {
 
   
   addImage("../src/pesquisador.png");
-  crudBtns(readOne_window, PESQUISADOR);
+  crudBtns(readOne_window, PESQUISADOR); 
 
 
   readOne_window->end();
