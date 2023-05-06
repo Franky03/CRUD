@@ -127,6 +127,27 @@ void isFeliz_callback(Fl_Widget* widget, void*data){
   }
 }
 
+void trabalhando_callback(Fl_Widget* widget, void*data){
+  Funcionario* f = static_cast<Funcionario*>(data);
+  f->trabalhar();
+}
+
+void descansando_callback(Fl_Widget* widget, void*data){
+  Funcionario* f = static_cast<Funcionario*>(data);
+  f->descansar();
+}
+
+void isTrabalhando_callback(Fl_Widget* widget, void*data){
+  Funcionario* f = static_cast<Funcionario*>(data);
+  int trabalhando = f->isTrabalhando();
+  cout << f->getNome();
+  if(trabalhando){
+    cout << " está trabalhando" << endl;
+  } else {
+    cout << " não está trabalhando" << endl;
+  }
+}
+
 void espera_callback(Fl_Widget* widget, void*data){
   Cliente* c = static_cast<Cliente*>(data);
 }
@@ -245,15 +266,16 @@ void search_callback(Fl_Widget* widget, void* data)
         salarioAnual->callback(salario_anual_callback, funcionario);
         wdw->add(salarioAnual);
         MyBtn *trabalharBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
+        trabalharBtn->callback(trabalhando_callback, funcionario);
         
         wdw->add(trabalharBtn);
         MyBtn *descansarBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
         
+        descansarBtn->callback(descansando_callback, funcionario);
         wdw->add(descansarBtn);
         MyBtn *isTrabalhando =  new MyBtn(430, 270, 120, 30, method_names[3].c_str());
-  
-        string *working = new string("Funcionário Trabalhando ?: " + funcionario->isTrabalhando()); 
-        isTrabalhando->callback(out_callback, working);
+
+        isTrabalhando->callback(isTrabalhando_callback, funcionario);
         
         wdw->add(isTrabalhando);
         MyBtn *aumentarSalario = new MyBtn(40, 310, 120, 30, method_names[4].c_str());
