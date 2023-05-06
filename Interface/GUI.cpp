@@ -6,7 +6,6 @@ using namespace std;
 MyWindow *window = new MyWindow(600,400, "BioLab");
 MyWindow *last_window = nullptr;
 
-
 // Banco de dados e CRUD
 sqlite3 *db;
 CRUD *crud = new CRUD(db);
@@ -188,11 +187,15 @@ void get_any_callback(Fl_Widget* widget, void*data){
 void remove_any_callback(Fl_Widget* widget, void*data){
   string* classe = reinterpret_cast<string*>(data);
   string classe_value = *classe;
-  cout << "ID do projeto que deseja remover: ";
-  string id;
-  getline(cin, id);
+  if(classe_value==PROJETO)
+    cout << "Nome do projeto que deseja remover: ";
+  else
+    cout << "Nome do equipamento que deseja remover: ";
+  string nome;
+  getline(cin, nome);
+  string id = crud->getIdFromName(classe_value, nome);
   crud->deleteObj(classe_value, id);
-  cout << id << " foi removido" << endl;
+  cout << nome << " foi removido" << endl;
 }
 
 void aumentaS_callback(Fl_Widget* widget, void*data){
@@ -267,18 +270,18 @@ void search_callback(Fl_Widget* widget, void* data)
         Funcionario *funcionario = new Funcionario(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]));
         method_names = funcionario->getMethods();
         
-        MyBtn *salarioAnual = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
+        MyBtn *salarioAnual = new MyBtn(40, 270, 120, 30, "Salário Anual");
         salarioAnual->callback(salario_anual_callback, funcionario);
         wdw->add(salarioAnual);
-        MyBtn *trabalharBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
+        MyBtn *trabalharBtn = new MyBtn(170, 270, 120, 30, "Trabalhar");
         trabalharBtn->callback(trabalhando_callback, funcionario);
         
         wdw->add(trabalharBtn);
-        MyBtn *descansarBtn = new MyBtn(300, 270, 120, 30, method_names[2].c_str());
+        MyBtn *descansarBtn = new MyBtn(300, 270, 120, 30, "Descansar");
         
         descansarBtn->callback(descansando_callback, funcionario);
         wdw->add(descansarBtn);
-        MyBtn *isTrabalhando =  new MyBtn(430, 270, 120, 30, method_names[3].c_str());
+        MyBtn *isTrabalhando =  new MyBtn(430, 270, 120, 30, "Trabalhando?");
 
         isTrabalhando->callback(isTrabalhando_callback, funcionario);
         
