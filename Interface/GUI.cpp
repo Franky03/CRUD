@@ -175,6 +175,16 @@ void remove_any_callback(Fl_Widget* widget, void*data){
   cout << nome << " foi removido" << endl;
 }
 
+void aumentaS_callback(Fl_Widget* widget, void*data){
+  Funcionario* f = static_cast<Funcionario*>(data);
+  f->aumentarSalario();
+}
+
+void salario_anual_callback(Fl_Widget* widget, void*data){
+  Funcionario* f = static_cast<Funcionario*>(data);
+  cout << "Salário anual: " << f->calcularSalarioAnual() << endl;
+}
+
 void search_callback(Fl_Widget* widget, void* data)
 {
   // Aqui eu estou pegando os argumentos passados como um struct
@@ -232,7 +242,7 @@ void search_callback(Fl_Widget* widget, void* data)
         method_names = funcionario->getMethods();
         
         MyBtn *salarioAnual = new MyBtn(40, 270, 120, 30, method_names[0].c_str());
-        
+        salarioAnual->callback(salario_anual_callback, funcionario);
         wdw->add(salarioAnual);
         MyBtn *trabalharBtn = new MyBtn(170, 270, 120, 30, method_names[1].c_str());
         
@@ -247,7 +257,7 @@ void search_callback(Fl_Widget* widget, void* data)
         
         wdw->add(isTrabalhando);
         MyBtn *aumentarSalario = new MyBtn(40, 310, 120, 30, method_names[4].c_str());
-        
+        aumentarSalario->callback(aumentaS_callback, funcionario);
         wdw->add(aumentarSalario);
         
       
