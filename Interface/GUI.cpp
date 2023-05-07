@@ -193,7 +193,15 @@ void remove_any_callback(Fl_Widget* widget, void*data){
     cout << "Nome do equipamento que deseja remover: ";
   string nome;
   getline(cin, nome);
+  if(nome==""){
+    cout << "Nome inválido" << endl;
+    return;
+  }
   string id = crud->getIdFromName(classe_value, nome);
+  if(id==""){
+    cout << "Nome inválido" << endl;
+    return;
+  }
   crud->deleteObj(classe_value, id);
   cout << nome << " foi removido" << endl;
 }
@@ -239,7 +247,7 @@ void search_callback(Fl_Widget* widget, void* data)
       if(result.size()>column_names.size()){
         result.erase(result.begin()+column_names.size(), result.end());
       }
-      
+      Funcionario *poli;
       Fl_Window* wdw = search_box->window();
       
       MyTable *table = new MyTable(20, 60, 560, 300);
@@ -267,27 +275,27 @@ void search_callback(Fl_Widget* widget, void* data)
       vector<string> method_names; 
 
       if(classe==FUNCIONARIO){
-        Funcionario *funcionario = new Funcionario(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]));
-        method_names = funcionario->getMethods();
+        poli = new Funcionario(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]));
+        method_names = poli->getMethods();
         
         MyBtn *salarioAnual = new MyBtn(40, 270, 120, 30, "Salário Anual");
-        salarioAnual->callback(salario_anual_callback, funcionario);
+        salarioAnual->callback(salario_anual_callback, poli);
         wdw->add(salarioAnual);
         MyBtn *trabalharBtn = new MyBtn(170, 270, 120, 30, "Trabalhar");
-        trabalharBtn->callback(trabalhando_callback, funcionario);
+        trabalharBtn->callback(trabalhando_callback, poli);
         
         wdw->add(trabalharBtn);
         MyBtn *descansarBtn = new MyBtn(300, 270, 120, 30, "Descansar");
         
-        descansarBtn->callback(descansando_callback, funcionario);
+        descansarBtn->callback(descansando_callback, poli);
         wdw->add(descansarBtn);
         MyBtn *isTrabalhando =  new MyBtn(430, 270, 120, 30, "Trabalhando?");
 
-        isTrabalhando->callback(isTrabalhando_callback, funcionario);
+        isTrabalhando->callback(isTrabalhando_callback, poli);
         
         wdw->add(isTrabalhando);
         MyBtn *aumentarSalario = new MyBtn(230, 310, 120, 30, "AumentaSalário");
-        aumentarSalario->callback(aumentaS_callback, funcionario);
+        aumentarSalario->callback(aumentaS_callback, poli);
         wdw->add(aumentarSalario);
         
       
@@ -320,12 +328,12 @@ void search_callback(Fl_Widget* widget, void* data)
       }
       else if(classe==PESQUISADOR){
   
-        Pesquisador *pesquisador = new Pesquisador(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]), result[8]);
+        poli = new Pesquisador(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]), result[8]);
         
-        method_names = pesquisador->getMethods();
+        method_names = poli->getMethods();
         MyBtn *areaBtn = new MyBtn(40, 270, 120, 30, "Área");
 
-        string *area = new string("Área: " + pesquisador->getArea());
+        string *area = new string("Área: " + ((Pesquisador*)poli)->getArea());
         
         areaBtn->callback(out_callback, area);
         wdw->add(areaBtn);
@@ -348,11 +356,11 @@ void search_callback(Fl_Widget* widget, void* data)
       }
 
       else if(classe==TECNICO){
-        Tecnico *tecnico = new Tecnico(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]), result[8]);
-        method_names = tecnico->getMethods();
+        poli = new Tecnico(result[1], stoi(result[2]), result[3], result[4], result[5], result[6], stof(result[7]), result[8]);
+        method_names = poli->getMethods();
         //"Area", "Equipamentos", "AddEquipamento", "RemoveEquipamento"
         MyBtn *areaBtn = new MyBtn(40, 270, 120, 30, "Área");
-        string *area = new string("Área: " + tecnico->getArea());
+        string *area = new string("Área: " + ((Tecnico*)poli)->getArea());
         areaBtn->callback(out_callback, area);
         MyBtn *equipamentosBtn = new MyBtn(170, 270, 120, 30, "Equipamentos");
         CallbackArgs *args = new CallbackArgs{static_cast<MyWindow*>(wdw), EQUIPAMENTO, false, false, result[0]};

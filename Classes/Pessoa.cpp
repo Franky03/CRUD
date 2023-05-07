@@ -14,6 +14,10 @@ string Pessoa::getNome(){
 }
 
 void Pessoa::setNome(string nome){
+    if(nome.empty()){
+        this->nome = "Sem nome";
+        return;
+    }
     this->nome = nome;
 }
 
@@ -22,6 +26,10 @@ int Pessoa::getIdade(){
 }
 
 void Pessoa::setIdade(int idade){
+    if(idade < 0 || idade > 100){
+        this->idade = 18;
+        return;
+    }
     this->idade = idade;
 }
 
@@ -30,6 +38,10 @@ string Pessoa::getCpf(){
 }
 
 void Pessoa::setCpf(string cpf){
+    if(cpf.empty()){
+        this->cpf = "Sem CPF";
+        return;
+    }
     this->cpf = cpf;
 }
 
@@ -38,5 +50,9 @@ string Pessoa::getTelefone(){
 }
 
 void Pessoa::setTelefone(string telefone){
+    if(telefone.empty()){
+        this->telefone = "Sem telefone";
+        return;
+    }
     this->telefone = telefone;
 }
