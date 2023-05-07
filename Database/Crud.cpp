@@ -6,7 +6,7 @@ CRUD::CRUD(sqlite3 *db)
 {
     this->db = db;
 }
-
+ 
 void Execute(const char *sql_ms, sqlite3 *db, char *err_msg, int rc) {
     rc = sqlite3_exec(db, sql_ms, 0, 0, &err_msg);
 

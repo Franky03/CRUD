@@ -19,7 +19,7 @@ class Funcionario : public Pessoa {
         double calcularSalarioAnual();
         void aumentarSalario();
         void aumentarSalario(float percentual);
-        vector<string> getMethods();
+        virtual vector<string> getMethods();
         void trabalhar();
         void descansar();
         int isTrabalhando();

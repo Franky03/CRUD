@@ -9,7 +9,7 @@ MyWindow *last_window = nullptr;
 // Banco de dados e CRUD
 sqlite3 *db;
 CRUD *crud = new CRUD(db);
-
+ 
 // Structs para passar argumentos para o callback
 struct CallbackArgs {
   MyWindow* window;
@@ -621,7 +621,7 @@ void CreateCallBack(Fl_Widget*w, void *data){
       InputStyle(descricaoInput, "Descrição: ");
       createArgs->inputs.push_back(descricaoInput); 
       Fl_Input *duracaoInput = new Fl_Input(150, 90, 300, 30);
-      InputStyle(duracaoInput, "Duração: ");
+      InputStyle(duracaoInput, "Duração(anos): ");
       createArgs->inputs.push_back(duracaoInput);
       Fl_Input *pesquisadorResp = new Fl_Input(150, 130, 300, 30);
       if(from_ro){
