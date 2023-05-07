@@ -628,7 +628,7 @@ void CreateCallBack(Fl_Widget*w, void *data){
         pesquisadorResp->value(id.c_str());
         pesquisadorResp->deactivate();
       }
-      InputStyle(pesquisadorResp, "Pesquisador: ");
+      InputStyle(pesquisadorResp, "Pesquisador(ID): ");
       createArgs->inputs.push_back(pesquisadorResp);
       
     }

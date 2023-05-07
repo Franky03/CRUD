@@ -25,12 +25,12 @@ Total ganho: R$ 56780.9
 ------------------------
 PROJETO
 ------------------------
-Total: 0
+Total: 2
 ------------------------
 EQUIPAMENTO
 ------------------------
-Total: 0
-Equipamentos disponíveis: 0
+Total: 1
+Equipamentos disponíveis: 1
 ------------------------
 Despesas totais: R$ 5.40686e+11
 Lucro do laboratório: R$ -5.40686e+11
