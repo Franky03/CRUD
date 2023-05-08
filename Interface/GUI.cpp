@@ -587,6 +587,13 @@ void CreateCallBack(Fl_Widget*w, void *data){
       createArgs->inputs.push_back(codigoInput);
       Fl_Input *cargoInput = new Fl_Input(150, 210, 300, 30);
       InputStyle(cargoInput, "Cargo: ");
+      if(classe == PESQUISADOR || classe == TECNICO){
+        if(classe == PESQUISADOR)
+          cargoInput->value("Pesquisador");
+        else
+          cargoInput->value("Técnico");
+        cargoInput->deactivate();
+      }
       createArgs->inputs.push_back(cargoInput);
       Fl_Input *salarioInput = new Fl_Input(150, 250, 300, 30);
       InputStyle(salarioInput, "Salário: ");

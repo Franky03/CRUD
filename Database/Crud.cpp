@@ -18,6 +18,15 @@ void Execute(const char *sql_ms, sqlite3 *db, char *err_msg, int rc) {
     }
 }
 
+int searchByNameCallBack(void* data, int argc, char** argv, char** azColName){
+    vector<string> *result = static_cast< vector<string> *>(data);
+    for(int i = 0; i < argc; i++){
+        result->push_back(argv[i]);
+    }
+    return 0;
+}
+
+
 int getIdFromNameCallback(void* data, int argc, char** argv, char** azColName){
     if(argc != 1){
         cerr << "Callback error: invalid number of columns" << endl;
@@ -161,6 +170,21 @@ void CRUD::createObj(string classe, vector<string> atributos){
     if(classe != "PROJETO" && classe != "EQUIPAMENTO"){
         sql += "nome, idade, cpf, telefone";
         values += "'" + atributos[0] + "', " + atributos[1] + ", '" + atributos[2] + "', '" + atributos[3] + "'";
+        //verifica cpf repetido
+        sql2 = "SELECT cpf FROM " + classe + " WHERE cpf = '" + atributos[2] + "';";
+        vector<string> result;
+        rc = sqlite3_exec(db, sql2.c_str(), searchByNameCallBack, &result, &err_msg);
+        if(rc != SQLITE_OK ) {
+            cerr << "SQL error: " << err_msg << endl;
+            sqlite3_free(err_msg);
+            sqlite3_close(db);
+            exit(1);
+        }
+        if(result.size() > 0){
+            cout << "CPF já cadastrado, tente novamente." << endl;
+            sqlite3_close(db);
+            return;
+        }
 
         if(classe == "FUNCIONARIO"){
             sql += ", codigo, cargo, salario)";
@@ -215,13 +239,6 @@ void CRUD::createObj(string classe, vector<string> atributos){
     cout << "Objeto criado com sucesso!" << endl;
 }
 
-int searchByNameCallBack(void* data, int argc, char** argv, char** azColName){
-    vector<string> *result = static_cast< vector<string> *>(data);
-    for(int i = 0; i < argc; i++){
-        result->push_back(argv[i]);
-    }
-    return 0;
-}
 
 int searchByColumnsCallBack(void* data, int argc, char** argv, char** azColName){
     vector<string>* columns = reinterpret_cast<vector<string>*>(data);
