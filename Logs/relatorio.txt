@@ -29,8 +29,8 @@ Total: 7
 ------------------------
 EQUIPAMENTO
 ------------------------
-Total: 1
-Equipamentos disponíveis: 1
+Total: 6
+Equipamentos disponíveis: 6
 ------------------------
 Despesas totais: R$ 185153
 Lucro do laboratório: R$ 39146.8
