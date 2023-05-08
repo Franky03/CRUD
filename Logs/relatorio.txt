@@ -3,8 +3,8 @@ Relatório do Laboratório
 FUNCIONARIO
 ------------------------
 Total: 7
-Total Gasto por Ano: R$ 1279839.00
-Total Gasto por Mês: R$ 106653.25
+Total Gasto por Ano: R$ 1409251.00
+Total Gasto por Mês: R$ 117437.58
 ------------------------
 PESQUISADOR
 ------------------------
@@ -25,12 +25,12 @@ Total ganho: R$ 224300.00
 ------------------------
 PROJETO
 ------------------------
-Total: 7
+Total: 6
 ------------------------
 EQUIPAMENTO
 ------------------------
-Total: 5
-Equipamentos disponíveis: 5
+Total: 4
+Equipamentos disponíveis: 4
 ------------------------
-Despesas totais: R$ 185153.25
-Lucro do laboratório: R$ 39146.75
+Despesas totais: R$ 195937.58
+Lucro do laboratório: R$ 28362.42

@@ -12,7 +12,7 @@ CRUD *crud = new CRUD(db);
  
 // Structs para passar argumentos para o callback
 struct CallbackArgs {
-  MyWindow* window;
+  MyWindow* window; 
   string classe;
   bool create;
   bool from_ro;
@@ -215,7 +215,7 @@ void aumentaS_callback(Fl_Widget* widget, void*data){
   values.push_back(to_string(f->getSalario()));
   vector<string> atributos;
   atributos.push_back("salario");
-  
+
   float salarioDepois = f->getSalario();
 
   if(salarioAntes==salarioDepois){
