@@ -14,23 +14,23 @@ Total Gasto por Mês: R$ 52500
 ------------------------
 TECNICO
 ------------------------
-Total: 2
-Total Gasto por Ano: R$ 52669
-Total Gasto por Mês: R$ 4389.08
+Total: 4
+Total Gasto por Ano: R$ 312000
+Total Gasto por Mês: R$ 26000
 ------------------------
 CLIENTE
 ------------------------
-Total: 1
-Total ganho: R$ 21034.6
+Total: 8
+Total ganho: R$ 224300
 ------------------------
 PROJETO
 ------------------------
-Total: 8
+Total: 7
 ------------------------
 EQUIPAMENTO
 ------------------------
 Total: 1
 Equipamentos disponíveis: 1
 ------------------------
-Despesas totais: R$ 163542
-Lucro do laboratório: R$ -142508
+Despesas totais: R$ 185153
+Lucro do laboratório: R$ 39146.8

@@ -877,7 +877,7 @@ void RelatorioCallBack(Fl_Widget *w, void *data){
 
   result = crud->readAll(CLIENTE);
   
-  for(int i = 1; i < result.size(); i+=7){
+  for(int i = 1; i < result.size(); i+=8){
     Cliente cliente = Cliente(result[i], stoi(result[i+1]), result[i+2], result[i+3], result[i+4], result[i+5], stof(result[i+6]));
     clientes.push_back(cliente);
   }
