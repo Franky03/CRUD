@@ -60,6 +60,13 @@ void Funcionario::aumentarSalario(){
     float percentual;
     cout << "Digite o percentual de aumento: ";
     cin >> percentual;
+    //verificar se o percentual não é um numero 
+    if(cin.fail()){
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Percentual inválido!" << endl;
+        return;
+    }
     if(percentual > 1) percentual /= 100;
     if(percentual < 0) percentual *= (-1);
     this->salario += this->salario * (percentual);

@@ -208,12 +208,20 @@ void remove_any_callback(Fl_Widget* widget, void*data){
 
 void aumentaS_callback(Fl_Widget* widget, void*data){
   Funcionario* f = static_cast<Funcionario*>(data);
+  float salarioAntes = f->getSalario();
   f->aumentarSalario();
   string id = crud->getIdFromName(FUNCIONARIO, f->getNome());
   vector<string> values;
   values.push_back(to_string(f->getSalario()));
   vector<string> atributos;
   atributos.push_back("salario");
+  
+  float salarioDepois = f->getSalario();
+
+  if(salarioAntes==salarioDepois){
+    cout << "Salário não foi alterado" << endl;
+    return;
+  }
   crud->updateObj(FUNCIONARIO, id, atributos, values);
 }
 
