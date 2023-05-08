@@ -887,11 +887,11 @@ void RelatorioCallBack(Fl_Widget *w, void *data){
   relatorio << "Total: " << clientes.size() << endl;
   
   float totalGanho = 0;
-  for(int i = 0; i < clientes.size(); i++){
+  for(int i = 0; i < clientes.size(); i++){ 
     totalGanho += clientes[i].getDevendo();
   }
   
-  relatorio << "Total ganho: R$ " << totalGanho << endl;
+  relatorio << "Total ganho: R$ " << fixed << setprecision(2) << totalGanho << endl;
   relatorio << "------------------------" << endl;
 
   result = crud->readAll(PROJETO);
@@ -903,7 +903,7 @@ void RelatorioCallBack(Fl_Widget *w, void *data){
     projetos.push_back(projeto);
   }
 
-  relatorio << "Total: " << projetos.size() << endl;
+  relatorio << "Total: " << fixed << setprecision(2) << projetos.size() << endl;
   relatorio << "------------------------" << endl;
 
   result = crud->readAll(EQUIPAMENTO);
@@ -915,7 +915,7 @@ void RelatorioCallBack(Fl_Widget *w, void *data){
 
   relatorio << EQUIPAMENTO << endl;
   relatorio << "------------------------" << endl;
-  relatorio << "Total: " << equipamentos.size() << endl;
+  relatorio << "Total: " << fixed << setprecision(2) << equipamentos.size() << endl;
   int disponiveis = 0;
   for(int i = 0; i < equipamentos.size(); i++){
     if(equipamentos[i].getDisponivel()){
@@ -925,8 +925,8 @@ void RelatorioCallBack(Fl_Widget *w, void *data){
   relatorio << "Equipamentos disponíveis: " << disponiveis << endl;
   relatorio << "------------------------" << endl;
 
-  relatorio << "Despesas totais: R$ " << despesas << endl;
-  relatorio << "Lucro do laboratório: R$ " << totalGanho - despesas << endl;
+  relatorio << "Despesas totais: R$ " << fixed << setprecision(2) << despesas << endl;
+  relatorio << "Lucro do laboratório: R$ " << fixed << setprecision(2) << totalGanho - despesas << endl;
 
   relatorio.close();
 

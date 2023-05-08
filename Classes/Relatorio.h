@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 
 template <class T>
 
@@ -41,8 +42,8 @@ class Relatorio {
                 salarioTotal += objetos[i].getSalario();
             }
 
-            arquivo << "Total Gasto por Ano: R$ " << salarioTotal*12 << endl;
-            arquivo << "Total Gasto por Mês: R$ " << salarioTotal << endl;
+            arquivo << "Total Gasto por Ano: R$ " << fixed << setprecision(2) << salarioTotal*12 << endl;
+            arquivo << "Total Gasto por Mês: R$ " << fixed << setprecision(2) << salarioTotal << endl;
 
             *totalSalario += salarioTotal;
 
