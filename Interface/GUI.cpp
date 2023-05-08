@@ -266,11 +266,9 @@ void search_callback(Fl_Widget* widget, void* data)
 
 
       table->set_data(result, column_names, false);   
-      table->col_width_all(100);
+      table->col_width_all(150);
       table->col_width(1, 200);
-      if(classe==PROJETO){
-        table->col_width(2,300);
-      }
+      if(classe==PROJETO) table->col_width(2,300);
       
       vector<string> method_names; 
 
@@ -489,7 +487,7 @@ void ReadAllCallBack(Fl_Widget*w, void *data){
 
   MyTable *table = new MyTable(20, 60, 560, 300, 11, 7);
   table->set_data(result, column_names);
-  table->col_width_all(100);
+  table->col_width_all(150);
   table->col_width(1, 200);
   if(classe==PROJETO) table->col_width(2, 300);
   else if(classe==FUNCIONARIO) table->col_width(6, 300);
