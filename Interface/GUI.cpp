@@ -455,14 +455,22 @@ void update_callback(Fl_Widget* widget, void* data)
   }
   //Uma solução seria percorrer os vetores de trás para frente e remover os elementos "NULL". 
   //Dessa forma, você não terá problemas de índice, pois os elementos que já foram verificados não mudarão de posição.
+  vector<string> aux;
   for(int i = values.size() - 1; i >= 0; i--)
   {
     if(values[i] == "NULL"){
       values.erase(values.begin() + i);
+      cout << "removendo:" << column_names[i] << endl;
       column_names.erase(column_names.begin() + i);
     }
+    else {
+      if(classe==PROJETO || classe==EQUIPAMENTO)
+        aux.push_back(column_names[i]);
+    }
   }
-  
+  if(classe==PROJETO || classe==EQUIPAMENTO)
+    column_names = aux;
+
   crud->updateObj(classe,id,column_names, values);
   
   wdw->hide();

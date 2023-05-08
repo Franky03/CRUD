@@ -180,6 +180,7 @@ void CRUD::createObj(string classe, vector<string> atributos){
         values += "'" + atributos[0] + "', '" + atributos[1] + "', " + atributos[2] + ")";
 
         // Adicionar registro na tabela de relacionamento de projeto-pesquisador
+        cout << "Atributo 3: " << atributos[3] << endl;
         sql2 = " INSERT INTO PROJETO_PESQUISADOR (id_projeto, id_pesquisador) VALUES ((SELECT MAX(id) FROM PROJETO), " + atributos[3]+ ")";
     }
     else if(classe == "EQUIPAMENTO"){
@@ -388,16 +389,16 @@ vector<string> CRUD::getRelation(string classe, string id){
         relation =  "SELECT DISTINCT nome, descricao, duracao FROM PROJETO "
                     "JOIN PROJETO_PESQUISADOR "
                     "ON PROJETO.id = PROJETO_PESQUISADOR.id_projeto "
-                    "WHERE PROJETO_PESQUISADOR.id_pesquisador IN "
-                    "(SELECT id_pesquisador FROM PROJETO_PESQUISADOR WHERE id_projeto = " + id + ");";
+                    "WHERE PROJETO_PESQUISADOR.id_projeto IN "
+                    "(SELECT id_projeto FROM PROJETO_PESQUISADOR WHERE id_pesquisador = " + id + ");";
 
     } else if(classe == "EQUIPAMENTO"){
         
         relation =  "SELECT DISTINCT nome, num_serie, modelo, disponivel FROM EQUIPAMENTO "
                     "JOIN TECNICO_EQUIPAMENTO "
                     "ON EQUIPAMENTO.id = TECNICO_EQUIPAMENTO.id_equipamento "
-                    "WHERE TECNICO_EQUIPAMENTO.id_tecnico IN "
-                    "(SELECT id_tecnico FROM TECNICO_EQUIPAMENTO WHERE id_equipamento = " + id + ");";
+                    "WHERE TECNICO_EQUIPAMENTO.id_equipamento IN "
+                    "(SELECT id_equipamento FROM TECNICO_EQUIPAMENTO WHERE id_tecnico = " + id + ");";
     }
 
     rc = sqlite3_exec(db, relation.c_str(), searchByNameCallBack, &result, &err_msg);
