@@ -7,6 +7,6 @@ class MyWindow : public Fl_Window {
     public:
         MyWindow(int w, int h, const char *title = 0) : Fl_Window(w, h, title) {
             color(0x62CDFF);
-            position(900, 300);
+            position(600, 250);
         }
 };

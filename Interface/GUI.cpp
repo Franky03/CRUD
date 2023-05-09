@@ -763,7 +763,7 @@ void PesquisadoresCallBack(Fl_Widget *w, void *data) {
   crudBtns(readOne_window, PESQUISADOR); 
 
 
-  readOne_window->end();
+  readOne_window->end(); 
   readOne_window->show();
 }
 

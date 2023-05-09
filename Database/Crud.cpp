@@ -6,7 +6,7 @@ CRUD::CRUD(sqlite3 *db)
 {
     this->db = db;
 }
- 
+
 void Execute(const char *sql_ms, sqlite3 *db, char *err_msg, int rc) {
     rc = sqlite3_exec(db, sql_ms, 0, 0, &err_msg);
 
@@ -153,6 +153,15 @@ void CRUD::CreateDB(){
 
 }
 
+bool verificaCPF(string cpf) {
+    for (char c : cpf) {
+        if (c < '0' || c > '9') {
+            return false;
+        }
+    }
+    return true;
+}
+
 void CRUD::createObj(string classe, vector<string> atributos){
     
     rc = sqlite3_open("mydb.db", &db);
@@ -171,6 +180,11 @@ void CRUD::createObj(string classe, vector<string> atributos){
         sql += "nome, idade, cpf, telefone";
         values += "'" + atributos[0] + "', " + atributos[1] + ", '" + atributos[2] + "', '" + atributos[3] + "'";
         //verifica cpf repetido
+        if(verificaCPF(atributos[2]) == false){
+            cout << "CPF inválido, tente novamente." << endl;
+            sqlite3_close(db);
+            return;
+        }
         sql2 = "SELECT cpf FROM " + classe + " WHERE cpf = '" + atributos[2] + "';";
         vector<string> result;
         rc = sqlite3_exec(db, sql2.c_str(), searchByNameCallBack, &result, &err_msg);
